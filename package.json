@@ -1,0 +1,10 @@
+{
+  "name": "haskellish-effect-ts",
+  "private": true,
+  "workspaces": ["packages/*", "examples/*"],
+  "scripts": {
+    "build": "bun run --filter 'packages/*' build",
+    "test": "bun run --filter 'packages/*' test",
+    "typecheck": "bun run --filter 'packages/*' typecheck"
+  }
+}
