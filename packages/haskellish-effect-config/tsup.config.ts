@@ -1,4 +1,4 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsup"
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -6,5 +6,10 @@ export default defineConfig({
   dts: true,
   splitting: false,
   clean: true,
-  external: ["eslint", "typescript", "eslint-plugin-haskellish-effect", "typescript-eslint"],
-});
+  external: [
+    "eslint",
+    "typescript",
+    "eslint-plugin-haskellish-effect",
+    "typescript-eslint",
+  ],
+})

@@ -1,9 +1,9 @@
-import type { TSESTree } from "@typescript-eslint/utils";
-import { createRule } from "../utils/create-rule.js";
-import { isAllowedImportSource } from "../utils/allowed-sources.js";
+import type { TSESTree } from "@typescript-eslint/utils"
+import { createRule } from "../utils/create-rule.js"
+import { isAllowedImportSource } from "../utils/allowed-sources.js"
 
-type Options = [{ allowedPackages?: string[] }];
-type MessageIds = "disallowedImport";
+type Options = [{ allowedPackages?: string[] }]
+type MessageIds = "disallowedImport"
 
 export const onlyAllowedImports = createRule<Options, MessageIds>({
   name: "only-allowed-imports",
@@ -32,8 +32,8 @@ export const onlyAllowedImports = createRule<Options, MessageIds>({
   },
   defaultOptions: [{}],
   create(context) {
-    const [options] = context.options;
-    const allowedPackages = options?.allowedPackages ?? [];
+    const [options] = context.options
+    const allowedPackages = options?.allowedPackages ?? []
 
     function checkSource(source: string, node: TSESTree.Node) {
       if (!isAllowedImportSource(source, allowedPackages)) {
@@ -41,27 +41,30 @@ export const onlyAllowedImports = createRule<Options, MessageIds>({
           node,
           messageId: "disallowedImport",
           data: { source },
-        });
+        })
       }
     }
 
     return {
       ImportDeclaration(node) {
-        checkSource(node.source.value, node);
+        checkSource(node.source.value, node)
       },
       ImportExpression(node) {
-        if (node.source.type === "Literal" && typeof node.source.value === "string") {
-          checkSource(node.source.value, node);
+        if (
+          node.source.type === "Literal" &&
+          typeof node.source.value === "string"
+        ) {
+          checkSource(node.source.value, node)
         }
       },
       ExportNamedDeclaration(node) {
         if (node.source) {
-          checkSource(node.source.value, node);
+          checkSource(node.source.value, node)
         }
       },
       ExportAllDeclaration(node) {
-        checkSource(node.source.value, node);
+        checkSource(node.source.value, node)
       },
-    };
+    }
   },
-});
+})

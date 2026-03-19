@@ -1,15 +1,15 @@
-import type { TSESTree } from "@typescript-eslint/utils";
-import { createRule } from "../utils/create-rule.js";
+import type { TSESTree } from "@typescript-eslint/utils"
+import { createRule } from "../utils/create-rule.js"
 
-type Options = [];
-type MessageIds = "missingEffectReturn";
+type Options = []
+type MessageIds = "missingEffectReturn"
 
 function hasEffectReturnType(
-  returnType: TSESTree.TSTypeAnnotation | undefined
+  returnType: TSESTree.TSTypeAnnotation | undefined,
 ): boolean {
-  if (!returnType) return false;
+  if (!returnType) return false
 
-  const typeAnnotation = returnType.typeAnnotation;
+  const typeAnnotation = returnType.typeAnnotation
 
   // Effect<...>
   if (
@@ -17,7 +17,7 @@ function hasEffectReturnType(
     typeAnnotation.typeName.type === "Identifier" &&
     typeAnnotation.typeName.name === "Effect"
   ) {
-    return true;
+    return true
   }
 
   // Effect.Effect<...>
@@ -28,10 +28,10 @@ function hasEffectReturnType(
     typeAnnotation.typeName.left.name === "Effect" &&
     typeAnnotation.typeName.right.name === "Effect"
   ) {
-    return true;
+    return true
   }
 
-  return false;
+  return false
 }
 
 export const effectBoundary = createRule<Options, MessageIds>({
@@ -44,7 +44,7 @@ export const effectBoundary = createRule<Options, MessageIds>({
     },
     messages: {
       missingEffectReturn:
-        "Exported function \"{{name}}\" should have an explicit Effect return type annotation.",
+        'Exported function "{{name}}" should have an explicit Effect return type annotation.',
     },
     schema: [],
   },
@@ -55,27 +55,27 @@ export const effectBoundary = createRule<Options, MessageIds>({
         | TSESTree.FunctionDeclaration
         | TSESTree.ArrowFunctionExpression
         | TSESTree.FunctionExpression,
-      name: string
+      name: string,
     ) {
       if (!hasEffectReturnType(node.returnType)) {
         context.report({
           node,
           messageId: "missingEffectReturn",
           data: { name },
-        });
+        })
       }
     }
 
     return {
       "ExportNamedDeclaration > FunctionDeclaration"(
-        node: TSESTree.FunctionDeclaration
+        node: TSESTree.FunctionDeclaration,
       ) {
         if (node.id) {
-          checkFunction(node, node.id.name);
+          checkFunction(node, node.id.name)
         }
       },
       "ExportNamedDeclaration > VariableDeclaration > VariableDeclarator"(
-        node: TSESTree.VariableDeclarator
+        node: TSESTree.VariableDeclarator,
       ) {
         if (
           node.id.type === "Identifier" &&
@@ -83,9 +83,9 @@ export const effectBoundary = createRule<Options, MessageIds>({
           (node.init.type === "ArrowFunctionExpression" ||
             node.init.type === "FunctionExpression")
         ) {
-          checkFunction(node.init, node.id.name);
+          checkFunction(node.init, node.id.name)
         }
       },
-    };
+    }
   },
-});
+})

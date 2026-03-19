@@ -1,6 +1,6 @@
-import type { Scope } from "@typescript-eslint/utils/ts-eslint";
-import { createRule } from "../utils/create-rule.js";
-import { isAllowedImportSource } from "../utils/allowed-sources.js";
+import type { Scope } from "@typescript-eslint/utils/ts-eslint"
+import { createRule } from "../utils/create-rule.js"
+import { isAllowedImportSource } from "../utils/allowed-sources.js"
 
 const ALWAYS_ALLOWED_GLOBALS = new Set([
   // Primitives & constructors
@@ -87,10 +87,10 @@ const ALWAYS_ALLOWED_GLOBALS = new Set([
   "AsyncIterableIterator",
   "Generator",
   "AsyncGenerator",
-]);
+])
 
-type Options = [{ allowedPackages?: string[]; allowedGlobals?: string[] }];
-type MessageIds = "disallowedGlobal" | "disallowedImport";
+type Options = [{ allowedPackages?: string[]; allowedGlobals?: string[] }]
+type MessageIds = "disallowedGlobal" | "disallowedImport"
 
 export const capabilityEnforcement = createRule<Options, MessageIds>({
   name: "capability-enforcement",
@@ -125,30 +125,32 @@ export const capabilityEnforcement = createRule<Options, MessageIds>({
   },
   defaultOptions: [{}],
   create(context) {
-    const [options] = context.options;
-    const allowedPackages = options?.allowedPackages ?? [];
-    const additionalAllowedGlobals = new Set(options?.allowedGlobals ?? []);
+    const [options] = context.options
+    const allowedPackages = options?.allowedPackages ?? []
+    const additionalAllowedGlobals = new Set(options?.allowedGlobals ?? [])
 
     function isAllowedGlobal(name: string): boolean {
-      return ALWAYS_ALLOWED_GLOBALS.has(name) || additionalAllowedGlobals.has(name);
+      return (
+        ALWAYS_ALLOWED_GLOBALS.has(name) || additionalAllowedGlobals.has(name)
+      )
     }
 
     function getImportSource(def: Scope.Definition): string | null {
-      const node = def.node;
+      const node = def.node
       if (def.type === "ImportBinding") {
-        const parent = node.parent;
+        const parent = node.parent
         if (parent && parent.type === "ImportDeclaration") {
-          return parent.source.value;
+          return parent.source.value
         }
       }
-      return null;
+      return null
     }
 
     function checkScope(scope: Scope.Scope) {
       for (const ref of scope.references) {
-        if (ref.isWriteOnly()) continue;
+        if (ref.isWriteOnly()) continue
 
-        const resolved = ref.resolved;
+        const resolved = ref.resolved
 
         if (resolved === null || resolved.defs.length === 0) {
           // Unresolved or built-in global
@@ -157,20 +159,23 @@ export const capabilityEnforcement = createRule<Options, MessageIds>({
               node: ref.identifier,
               messageId: "disallowedGlobal",
               data: { name: ref.identifier.name },
-            });
+            })
           }
-          continue;
+          continue
         }
 
         for (const def of resolved.defs) {
           if (def.type === "ImportBinding") {
-            const source = getImportSource(def);
-            if (source !== null && !isAllowedImportSource(source, allowedPackages)) {
+            const source = getImportSource(def)
+            if (
+              source !== null &&
+              !isAllowedImportSource(source, allowedPackages)
+            ) {
               context.report({
                 node: ref.identifier,
                 messageId: "disallowedImport",
                 data: { source },
-              });
+              })
             }
           }
           // Local defs (Variable, FunctionName, ClassName, Parameter, CatchClause) are always OK
@@ -178,15 +183,15 @@ export const capabilityEnforcement = createRule<Options, MessageIds>({
       }
 
       for (const childScope of scope.childScopes) {
-        checkScope(childScope);
+        checkScope(childScope)
       }
     }
 
     return {
       "Program:exit"(node) {
-        const scope = context.sourceCode.getScope(node);
-        checkScope(scope);
+        const scope = context.sourceCode.getScope(node)
+        checkScope(scope)
       },
-    };
+    }
   },
-});
+})

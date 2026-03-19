@@ -8,22 +8,22 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-export const unsafeGlobalThis: typeof globalThis = globalThis;
+export const unsafeGlobalThis: typeof globalThis = globalThis
 
-export const unsafeConsole: typeof console = console;
+export const unsafeConsole: typeof console = console
 
-export const unsafeFetch: typeof fetch = fetch;
+export const unsafeFetch: typeof fetch = fetch
 
-export const unsafeMath: typeof Math = Math;
+export const unsafeMath: typeof Math = Math
 
-export const unsafeJSON: typeof JSON = JSON;
+export const unsafeJSON: typeof JSON = JSON
 
-export const unsafeDate: typeof Date = Date;
+export const unsafeDate: typeof Date = Date
 
-export const unsafeSetTimeout: typeof setTimeout = setTimeout;
+export const unsafeSetTimeout: typeof setTimeout = setTimeout
 
-export const unsafeSetInterval: typeof setInterval = setInterval;
+export const unsafeSetInterval: typeof setInterval = setInterval
 
-export const unsafeCrypto: typeof crypto = crypto;
+export const unsafeCrypto: typeof crypto = crypto
 
-export const unsafePromise: typeof Promise = Promise;
+export const unsafePromise: typeof Promise = Promise

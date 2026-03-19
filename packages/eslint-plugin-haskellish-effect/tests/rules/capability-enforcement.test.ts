@@ -1,8 +1,8 @@
-import "../setup.js";
-import { RuleTester } from "@typescript-eslint/rule-tester";
-import { capabilityEnforcement } from "../../src/rules/capability-enforcement.js";
+import "../setup.js"
+import { RuleTester } from "@typescript-eslint/rule-tester"
+import { capabilityEnforcement } from "../../src/rules/capability-enforcement.js"
 
-const ruleTester = new RuleTester();
+const ruleTester = new RuleTester()
 
 ruleTester.run("capability-enforcement", capabilityEnforcement, {
   valid: [
@@ -59,4 +59,4 @@ ruleTester.run("capability-enforcement", capabilityEnforcement, {
       errors: [{ messageId: "disallowedImport" }],
     },
   ],
-});
+})

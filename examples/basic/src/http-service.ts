@@ -10,7 +10,7 @@ import {
   pipe,
   tryFetch,
   jsonParse,
-} from "haskellish-effect";
+} from "haskellish-effect"
 
 // --- Domain types ---
 
@@ -18,19 +18,17 @@ const User = Schema.Struct({
   id: Schema.Number,
   name: Schema.String,
   email: Schema.String,
-});
+})
 
-type User = typeof User.Type;
+type User = typeof User.Type
 
 // --- Service definition (like a Haskell typeclass) ---
 
 export class UserService extends Context.Tag("UserService")<
   UserService,
   {
-    readonly getUser: (
-      id: number
-    ) => Effect.Effect<User, unknown>;
-    readonly listUsers: () => Effect.Effect<ReadonlyArray<User>, unknown>;
+    readonly getUser: (id: number) => Effect.Effect<User, unknown>
+    readonly listUsers: () => Effect.Effect<ReadonlyArray<User>, unknown>
   }
 >() {}
 
@@ -44,10 +42,10 @@ export const UserServiceLive = Layer.succeed(UserService, {
         Effect.tryPromise({
           try: () => response.text(),
           catch: (e) => e,
-        })
+        }),
       ),
       Effect.flatMap((text) => jsonParse(text)),
-      Effect.flatMap(Schema.decodeUnknown(User))
+      Effect.flatMap(Schema.decodeUnknown(User)),
     ),
   listUsers: () =>
     pipe(
@@ -56,17 +54,17 @@ export const UserServiceLive = Layer.succeed(UserService, {
         Effect.tryPromise({
           try: () => response.text(),
           catch: (e) => e,
-        })
+        }),
       ),
       Effect.flatMap((text) => jsonParse(text)),
-      Effect.flatMap(Schema.decodeUnknown(Schema.Array(User)))
+      Effect.flatMap(Schema.decodeUnknown(Schema.Array(User))),
     ),
-});
+})
 
 // --- Usage (pure program description, no side effects until run) ---
 
 export const program = Effect.gen(function* () {
-  const userService = yield* UserService;
-  const user = yield* userService.getUser(1);
-  return user;
-});
+  const userService = yield* UserService
+  const user = yield* userService.getUser(1)
+  return user
+})

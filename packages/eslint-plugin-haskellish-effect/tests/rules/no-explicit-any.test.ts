@@ -1,8 +1,8 @@
-import "../setup.js";
-import { RuleTester } from "@typescript-eslint/rule-tester";
-import { noExplicitAny } from "../../src/rules/no-explicit-any.js";
+import "../setup.js"
+import { RuleTester } from "@typescript-eslint/rule-tester"
+import { noExplicitAny } from "../../src/rules/no-explicit-any.js"
 
-const ruleTester = new RuleTester();
+const ruleTester = new RuleTester()
 
 ruleTester.run("no-explicit-any", noExplicitAny, {
   valid: [
@@ -29,4 +29,4 @@ ruleTester.run("no-explicit-any", noExplicitAny, {
       errors: [{ messageId: "noAny" }],
     },
   ],
-});
+})

@@ -1,8 +1,8 @@
-import tseslint from "typescript-eslint";
+import tseslint from "typescript-eslint"
 import haskellishPlugin, {
   recommended as haskellishRecommended,
   strict as haskellishStrict,
-} from "eslint-plugin-haskellish-effect";
+} from "eslint-plugin-haskellish-effect"
 
 export const recommended: ReadonlyArray<unknown> = [
   ...tseslint.configs.recommendedTypeChecked,
@@ -15,7 +15,7 @@ export const recommended: ReadonlyArray<unknown> = [
       "@typescript-eslint/no-unsafe-return": "error",
     },
   },
-];
+]
 
 export const strict: ReadonlyArray<unknown> = [
   ...tseslint.configs.strictTypeChecked,
@@ -31,6 +31,6 @@ export const strict: ReadonlyArray<unknown> = [
       "@typescript-eslint/no-misused-promises": "error",
     },
   },
-];
+]
 
-export { haskellishPlugin };
+export { haskellishPlugin }

@@ -1,8 +1,8 @@
-import "../setup.js";
-import { RuleTester } from "@typescript-eslint/rule-tester";
-import { noGlobalAccess } from "../../src/rules/no-global-access.js";
+import "../setup.js"
+import { RuleTester } from "@typescript-eslint/rule-tester"
+import { noGlobalAccess } from "../../src/rules/no-global-access.js"
 
-const ruleTester = new RuleTester();
+const ruleTester = new RuleTester()
 
 ruleTester.run("no-global-access", noGlobalAccess, {
   valid: [
@@ -44,4 +44,4 @@ ruleTester.run("no-global-access", noGlobalAccess, {
       errors: [{ messageId: "blockedGlobal" }],
     },
   ],
-});
+})

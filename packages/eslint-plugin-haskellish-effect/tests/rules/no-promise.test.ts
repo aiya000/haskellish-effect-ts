@@ -1,8 +1,8 @@
-import "../setup.js";
-import { RuleTester } from "@typescript-eslint/rule-tester";
-import { noPromise } from "../../src/rules/no-promise.js";
+import "../setup.js"
+import { RuleTester } from "@typescript-eslint/rule-tester"
+import { noPromise } from "../../src/rules/no-promise.js"
 
-const ruleTester = new RuleTester();
+const ruleTester = new RuleTester()
 
 ruleTester.run("no-promise", noPromise, {
   valid: [
@@ -38,4 +38,4 @@ ruleTester.run("no-promise", noPromise, {
       errors: [{ messageId: "noPromiseStatic" }],
     },
   ],
-});
+})

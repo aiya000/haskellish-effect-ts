@@ -1,8 +1,8 @@
-import "../setup.js";
-import { RuleTester } from "@typescript-eslint/rule-tester";
-import { noImplicitGlobalThis } from "../../src/rules/no-implicit-globalthis.js";
+import "../setup.js"
+import { RuleTester } from "@typescript-eslint/rule-tester"
+import { noImplicitGlobalThis } from "../../src/rules/no-implicit-globalthis.js"
 
-const ruleTester = new RuleTester();
+const ruleTester = new RuleTester()
 
 ruleTester.run("no-implicit-globalthis", noImplicitGlobalThis, {
   valid: [
@@ -28,4 +28,4 @@ ruleTester.run("no-implicit-globalthis", noImplicitGlobalThis, {
       errors: [{ messageId: "blockedGlobalThis" }],
     },
   ],
-});
+})
