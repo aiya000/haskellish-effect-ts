@@ -13,10 +13,10 @@ export function isAllowedImportSource(
     return true
   }
   return additionalAllowed.some((pkg) => {
-    if (pkg.endsWith("/*")) {
+    if (pkg.endsWith('/*')) {
       const prefix = pkg.slice(0, -1)
       return source === pkg.slice(0, -2) || source.startsWith(prefix)
     }
-    return source === pkg || source.startsWith(pkg + "/")
+    return source === pkg || source.startsWith(pkg + '/')
   })
 }

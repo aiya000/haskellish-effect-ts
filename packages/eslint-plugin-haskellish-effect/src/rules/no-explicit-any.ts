@@ -1,18 +1,18 @@
-import { createRule } from "../utils/create-rule.js"
+import { createRule } from '../utils/create-rule.js'
 
 type Options = []
-type MessageIds = "noAny"
+type MessageIds = 'noAny'
 
 export const noExplicitAny = createRule<Options, MessageIds>({
-  name: "no-explicit-any",
+  name: 'no-explicit-any',
   meta: {
-    type: "problem",
+    type: 'problem',
     docs: {
-      description: "Disallow the `any` type annotation",
+      description: 'Disallow the `any` type annotation',
     },
     messages: {
       noAny:
-        "The `any` type is not allowed. Use `unknown`, a specific type, or a generic parameter instead.",
+        'The `any` type is not allowed. Use `unknown`, a specific type, or a generic parameter instead.',
     },
     schema: [],
   },
@@ -20,7 +20,7 @@ export const noExplicitAny = createRule<Options, MessageIds>({
   create(context) {
     return {
       TSAnyKeyword(node) {
-        context.report({ node, messageId: "noAny" })
+        context.report({ node, messageId: 'noAny' })
       },
     }
   },

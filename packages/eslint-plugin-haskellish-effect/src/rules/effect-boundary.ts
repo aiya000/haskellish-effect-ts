@@ -1,8 +1,8 @@
-import type { TSESTree } from "@typescript-eslint/utils"
-import { createRule } from "../utils/create-rule.js"
+import type { TSESTree } from '@typescript-eslint/utils'
+import { createRule } from '../utils/create-rule.js'
 
 type Options = []
-type MessageIds = "missingEffectReturn"
+type MessageIds = 'missingEffectReturn'
 
 function hasEffectReturnType(
   returnType: TSESTree.TSTypeAnnotation | undefined,
@@ -13,20 +13,20 @@ function hasEffectReturnType(
 
   // Effect<...>
   if (
-    typeAnnotation.type === "TSTypeReference" &&
-    typeAnnotation.typeName.type === "Identifier" &&
-    typeAnnotation.typeName.name === "Effect"
+    typeAnnotation.type === 'TSTypeReference' &&
+    typeAnnotation.typeName.type === 'Identifier' &&
+    typeAnnotation.typeName.name === 'Effect'
   ) {
     return true
   }
 
   // Effect.Effect<...>
   if (
-    typeAnnotation.type === "TSTypeReference" &&
-    typeAnnotation.typeName.type === "TSQualifiedName" &&
-    typeAnnotation.typeName.left.type === "Identifier" &&
-    typeAnnotation.typeName.left.name === "Effect" &&
-    typeAnnotation.typeName.right.name === "Effect"
+    typeAnnotation.type === 'TSTypeReference' &&
+    typeAnnotation.typeName.type === 'TSQualifiedName' &&
+    typeAnnotation.typeName.left.type === 'Identifier' &&
+    typeAnnotation.typeName.left.name === 'Effect' &&
+    typeAnnotation.typeName.right.name === 'Effect'
   ) {
     return true
   }
@@ -35,12 +35,12 @@ function hasEffectReturnType(
 }
 
 export const effectBoundary = createRule<Options, MessageIds>({
-  name: "effect-boundary",
+  name: 'effect-boundary',
   meta: {
-    type: "suggestion",
+    type: 'suggestion',
     docs: {
       description:
-        "Exported functions should have an Effect return type annotation",
+        'Exported functions should have an Effect return type annotation',
     },
     messages: {
       missingEffectReturn:
@@ -60,28 +60,28 @@ export const effectBoundary = createRule<Options, MessageIds>({
       if (!hasEffectReturnType(node.returnType)) {
         context.report({
           node,
-          messageId: "missingEffectReturn",
+          messageId: 'missingEffectReturn',
           data: { name },
         })
       }
     }
 
     return {
-      "ExportNamedDeclaration > FunctionDeclaration"(
+      'ExportNamedDeclaration > FunctionDeclaration'(
         node: TSESTree.FunctionDeclaration,
       ) {
         if (node.id) {
           checkFunction(node, node.id.name)
         }
       },
-      "ExportNamedDeclaration > VariableDeclaration > VariableDeclarator"(
+      'ExportNamedDeclaration > VariableDeclaration > VariableDeclarator'(
         node: TSESTree.VariableDeclarator,
       ) {
         if (
-          node.id.type === "Identifier" &&
+          node.id.type === 'Identifier' &&
           node.init &&
-          (node.init.type === "ArrowFunctionExpression" ||
-            node.init.type === "FunctionExpression")
+          (node.init.type === 'ArrowFunctionExpression' ||
+            node.init.type === 'FunctionExpression')
         ) {
           checkFunction(node.init, node.id.name)
         }

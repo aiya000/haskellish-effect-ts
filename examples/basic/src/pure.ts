@@ -2,7 +2,7 @@
  * Pure functions — no side effects, no imports from unsafe modules.
  * Everything here is referentially transparent.
  */
-import { pipe, Option, Either, Match, Array } from "haskellish-effect"
+import { pipe, Option, Either, Match, Array } from 'haskellish-effect'
 
 // Pure transformation with pipe
 export const double = (n: number): number => n * 2
@@ -19,21 +19,21 @@ export const safeHead = <A>(xs: ReadonlyArray<A>): Option.Option<A> =>
 
 // Either: computations that can fail with typed errors
 export type ValidationError =
-  | { readonly _tag: "TooShort"; readonly minLength: number }
-  | { readonly _tag: "TooLong"; readonly maxLength: number }
-  | { readonly _tag: "InvalidChars" }
+  | { readonly _tag: 'TooShort'; readonly minLength: number }
+  | { readonly _tag: 'TooLong'; readonly maxLength: number }
+  | { readonly _tag: 'InvalidChars' }
 
 export const validateUsername = (
   input: string,
 ): Either.Either<string, ValidationError> => {
   if (input.length < 3) {
-    return Either.left({ _tag: "TooShort", minLength: 3 })
+    return Either.left({ _tag: 'TooShort', minLength: 3 })
   }
   if (input.length > 20) {
-    return Either.left({ _tag: "TooLong", maxLength: 20 })
+    return Either.left({ _tag: 'TooLong', maxLength: 20 })
   }
   if (!/^[a-zA-Z0-9_]+$/.test(input)) {
-    return Either.left({ _tag: "InvalidChars" })
+    return Either.left({ _tag: 'InvalidChars' })
   }
   return Either.right(input)
 }
@@ -48,14 +48,14 @@ export const describeValidation = (
       onLeft: (error) =>
         Match.value(error).pipe(
           Match.when(
-            { _tag: "TooShort" },
+            { _tag: 'TooShort' },
             (e) => `Too short (min ${e.minLength})`,
           ),
           Match.when(
-            { _tag: "TooLong" },
+            { _tag: 'TooLong' },
             (e) => `Too long (max ${e.maxLength})`,
           ),
-          Match.when({ _tag: "InvalidChars" }, () => "Invalid characters"),
+          Match.when({ _tag: 'InvalidChars' }, () => 'Invalid characters'),
           Match.exhaustive,
         ),
       onRight: (name) => `Valid: ${name}`,

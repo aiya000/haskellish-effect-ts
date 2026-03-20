@@ -1,13 +1,13 @@
-export { tryFetch, FetchError, HttpError } from "./fetch.js"
+export { tryFetch, FetchError, HttpError } from './fetch.js'
 export {
   jsonParse,
   jsonStringify,
   JsonParseError,
   JsonStringifyError,
-} from "./json.js"
-export { safeSetTimeout, safeSetInterval } from "./timers.js"
-export { safeRandom } from "./random.js"
-export { safeNow, safeDate } from "./date.js"
+} from './json.js'
+export { safeSetTimeout, safeSetInterval } from './timers.js'
+export { safeRandom } from './random.js'
+export { safeNow, safeDate } from './date.js'
 export {
   consoleLog,
   consoleWarn,
@@ -27,4 +27,4 @@ export {
   consoleCountReset,
   consoleClear,
   consoleAssert,
-} from "./console.js"
+} from './console.js'

@@ -1,10 +1,10 @@
-import { Effect, Data } from "effect"
+import { Effect, Data } from 'effect'
 
-export class FetchError extends Data.TaggedError("FetchError")<{
+export class FetchError extends Data.TaggedError('FetchError')<{
   readonly reason: unknown
 }> {}
 
-export class HttpError extends Data.TaggedError("HttpError")<{
+export class HttpError extends Data.TaggedError('HttpError')<{
   readonly status: number
   readonly statusText: string
   readonly url: string
@@ -25,7 +25,7 @@ export const tryFetch = (
           status: response.status,
           statusText: response.statusText,
           url:
-            typeof input === "string"
+            typeof input === 'string'
               ? input
               : input instanceof URL
                 ? input.toString()

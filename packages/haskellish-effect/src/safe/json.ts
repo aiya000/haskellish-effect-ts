@@ -1,11 +1,11 @@
-import { Effect, Data } from "effect"
+import { Effect, Data } from 'effect'
 
-export class JsonParseError extends Data.TaggedError("JsonParseError")<{
+export class JsonParseError extends Data.TaggedError('JsonParseError')<{
   readonly input: string
   readonly reason: unknown
 }> {}
 
-export class JsonStringifyError extends Data.TaggedError("JsonStringifyError")<{
+export class JsonStringifyError extends Data.TaggedError('JsonStringifyError')<{
   readonly reason: unknown
 }> {}
 

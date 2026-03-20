@@ -1,104 +1,104 @@
-import type { Scope } from "@typescript-eslint/utils/ts-eslint"
-import { createRule } from "../utils/create-rule.js"
-import { isAllowedImportSource } from "../utils/allowed-sources.js"
+import type { Scope } from '@typescript-eslint/utils/ts-eslint'
+import { createRule } from '../utils/create-rule.js'
+import { isAllowedImportSource } from '../utils/allowed-sources.js'
 
 const ALWAYS_ALLOWED_GLOBALS = new Set([
   // Primitives & constructors
-  "undefined",
-  "NaN",
-  "Infinity",
-  "parseInt",
-  "parseFloat",
-  "isNaN",
-  "isFinite",
-  "encodeURIComponent",
-  "decodeURIComponent",
-  "encodeURI",
-  "decodeURI",
+  'undefined',
+  'NaN',
+  'Infinity',
+  'parseInt',
+  'parseFloat',
+  'isNaN',
+  'isFinite',
+  'encodeURIComponent',
+  'decodeURIComponent',
+  'encodeURI',
+  'decodeURI',
   // Pure constructors
-  "Array",
-  "Object",
-  "String",
-  "Number",
-  "Boolean",
-  "Symbol",
-  "BigInt",
-  "Map",
-  "Set",
-  "WeakMap",
-  "WeakSet",
-  "WeakRef",
-  "FinalizationRegistry",
-  "RegExp",
-  "Proxy",
-  "Reflect",
+  'Array',
+  'Object',
+  'String',
+  'Number',
+  'Boolean',
+  'Symbol',
+  'BigInt',
+  'Map',
+  'Set',
+  'WeakMap',
+  'WeakSet',
+  'WeakRef',
+  'FinalizationRegistry',
+  'RegExp',
+  'Proxy',
+  'Reflect',
   // Typed arrays
-  "ArrayBuffer",
-  "SharedArrayBuffer",
-  "DataView",
-  "Int8Array",
-  "Uint8Array",
-  "Uint8ClampedArray",
-  "Int16Array",
-  "Uint16Array",
-  "Int32Array",
-  "Uint32Array",
-  "Float32Array",
-  "Float64Array",
-  "BigInt64Array",
-  "BigUint64Array",
+  'ArrayBuffer',
+  'SharedArrayBuffer',
+  'DataView',
+  'Int8Array',
+  'Uint8Array',
+  'Uint8ClampedArray',
+  'Int16Array',
+  'Uint16Array',
+  'Int32Array',
+  'Uint32Array',
+  'Float32Array',
+  'Float64Array',
+  'BigInt64Array',
+  'BigUint64Array',
   // Errors
-  "Error",
-  "TypeError",
-  "RangeError",
-  "ReferenceError",
-  "SyntaxError",
-  "URIError",
-  "EvalError",
-  "AggregateError",
+  'Error',
+  'TypeError',
+  'RangeError',
+  'ReferenceError',
+  'SyntaxError',
+  'URIError',
+  'EvalError',
+  'AggregateError',
   // Iteration
-  "Iterator",
+  'Iterator',
   // Utilities
-  "structuredClone",
-  "TextEncoder",
-  "TextDecoder",
+  'structuredClone',
+  'TextEncoder',
+  'TextDecoder',
   // Type-level globals (used in type annotations)
-  "ReadonlyArray",
-  "ReadonlyMap",
-  "ReadonlySet",
-  "Readonly",
-  "Partial",
-  "Required",
-  "Pick",
-  "Omit",
-  "Record",
-  "Exclude",
-  "Extract",
-  "NonNullable",
-  "Parameters",
-  "ReturnType",
-  "InstanceType",
-  "ConstructorParameters",
-  "Awaited",
-  "PromiseLike",
-  "Iterable",
-  "IterableIterator",
-  "AsyncIterable",
-  "AsyncIterableIterator",
-  "Generator",
-  "AsyncGenerator",
+  'ReadonlyArray',
+  'ReadonlyMap',
+  'ReadonlySet',
+  'Readonly',
+  'Partial',
+  'Required',
+  'Pick',
+  'Omit',
+  'Record',
+  'Exclude',
+  'Extract',
+  'NonNullable',
+  'Parameters',
+  'ReturnType',
+  'InstanceType',
+  'ConstructorParameters',
+  'Awaited',
+  'PromiseLike',
+  'Iterable',
+  'IterableIterator',
+  'AsyncIterable',
+  'AsyncIterableIterator',
+  'Generator',
+  'AsyncGenerator',
 ])
 
 type Options = [{ allowedPackages?: string[]; allowedGlobals?: string[] }]
-type MessageIds = "disallowedGlobal" | "disallowedImport"
+type MessageIds = 'disallowedGlobal' | 'disallowedImport'
 
 export const capabilityEnforcement = createRule<Options, MessageIds>({
-  name: "capability-enforcement",
+  name: 'capability-enforcement',
   meta: {
-    type: "problem",
+    type: 'problem',
     docs: {
       description:
-        "Enforce closed-world model: all bindings must come from allowed sources or be pure globals",
+        'Enforce closed-world model: all bindings must come from allowed sources or be pure globals',
     },
     messages: {
       disallowedGlobal:
@@ -108,15 +108,15 @@ export const capabilityEnforcement = createRule<Options, MessageIds>({
     },
     schema: [
       {
-        type: "object",
+        type: 'object',
         properties: {
           allowedPackages: {
-            type: "array",
-            items: { type: "string" },
+            type: 'array',
+            items: { type: 'string' },
           },
           allowedGlobals: {
-            type: "array",
-            items: { type: "string" },
+            type: 'array',
+            items: { type: 'string' },
           },
         },
         additionalProperties: false,
@@ -137,9 +137,9 @@ export const capabilityEnforcement = createRule<Options, MessageIds>({
 
     function getImportSource(def: Scope.Definition): string | null {
       const node = def.node
-      if (def.type === "ImportBinding") {
+      if (def.type === 'ImportBinding') {
         const parent = node.parent
-        if (parent && parent.type === "ImportDeclaration") {
+        if (parent && parent.type === 'ImportDeclaration') {
           return parent.source.value
         }
       }
@@ -157,7 +157,7 @@ export const capabilityEnforcement = createRule<Options, MessageIds>({
           if (!isAllowedGlobal(ref.identifier.name)) {
             context.report({
               node: ref.identifier,
-              messageId: "disallowedGlobal",
+              messageId: 'disallowedGlobal',
               data: { name: ref.identifier.name },
             })
           }
@@ -165,7 +165,7 @@ export const capabilityEnforcement = createRule<Options, MessageIds>({
         }
 
         for (const def of resolved.defs) {
-          if (def.type === "ImportBinding") {
+          if (def.type === 'ImportBinding') {
             const source = getImportSource(def)
             if (
               source !== null &&
@@ -173,7 +173,7 @@ export const capabilityEnforcement = createRule<Options, MessageIds>({
             ) {
               context.report({
                 node: ref.identifier,
-                messageId: "disallowedImport",
+                messageId: 'disallowedImport',
                 data: { source },
               })
             }
@@ -188,7 +188,7 @@ export const capabilityEnforcement = createRule<Options, MessageIds>({
     }
 
     return {
-      "Program:exit"(node) {
+      'Program:exit'(node) {
         const scope = context.sourceCode.getScope(node)
         checkScope(scope)
       },

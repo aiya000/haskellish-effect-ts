@@ -1,10 +1,10 @@
-import "../setup.js"
-import { RuleTester } from "@typescript-eslint/rule-tester"
-import { capabilityEnforcement } from "../../src/rules/capability-enforcement.js"
+import '../setup.js'
+import { RuleTester } from '@typescript-eslint/rule-tester'
+import { capabilityEnforcement } from '../../src/rules/capability-enforcement.js'
 
 const ruleTester = new RuleTester()
 
-ruleTester.run("capability-enforcement", capabilityEnforcement, {
+ruleTester.run('capability-enforcement', capabilityEnforcement, {
   valid: [
     // Local variable
     { code: `const x = 42; const y = x + 1` },
@@ -29,34 +29,34 @@ ruleTester.run("capability-enforcement", capabilityEnforcement, {
     // Additional allowed
     {
       code: `import { z } from "zod"; z.string()`,
-      options: [{ allowedPackages: ["zod"] }],
+      options: [{ allowedPackages: ['zod'] }],
     },
     // Additional allowed globals
     {
       code: `console.log("hi")`,
-      options: [{ allowedGlobals: ["console"] }],
+      options: [{ allowedGlobals: ['console'] }],
     },
   ],
   invalid: [
     {
       code: `fetch("https://example.com")`,
-      errors: [{ messageId: "disallowedGlobal" }],
+      errors: [{ messageId: 'disallowedGlobal' }],
     },
     {
       code: `console.log("hello")`,
-      errors: [{ messageId: "disallowedGlobal" }],
+      errors: [{ messageId: 'disallowedGlobal' }],
     },
     {
       code: `const d = new Date()`,
-      errors: [{ messageId: "disallowedGlobal" }],
+      errors: [{ messageId: 'disallowedGlobal' }],
     },
     {
       code: `import { foo } from "effect"; foo()`,
-      errors: [{ messageId: "disallowedImport" }],
+      errors: [{ messageId: 'disallowedImport' }],
     },
     {
       code: `import express from "express"; express()`,
-      errors: [{ messageId: "disallowedImport" }],
+      errors: [{ messageId: 'disallowedImport' }],
     },
   ],
 })

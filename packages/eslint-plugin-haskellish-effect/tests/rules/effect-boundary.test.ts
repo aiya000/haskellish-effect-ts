@@ -1,10 +1,10 @@
-import "../setup.js"
-import { RuleTester } from "@typescript-eslint/rule-tester"
-import { effectBoundary } from "../../src/rules/effect-boundary.js"
+import '../setup.js'
+import { RuleTester } from '@typescript-eslint/rule-tester'
+import { effectBoundary } from '../../src/rules/effect-boundary.js'
 
 const ruleTester = new RuleTester()
 
-ruleTester.run("effect-boundary", effectBoundary, {
+ruleTester.run('effect-boundary', effectBoundary, {
   valid: [
     // Non-exported functions are not checked
     { code: `function foo(): number { return 42 }` },
@@ -25,19 +25,19 @@ ruleTester.run("effect-boundary", effectBoundary, {
   invalid: [
     {
       code: `export function foo() { return 42 }`,
-      errors: [{ messageId: "missingEffectReturn" }],
+      errors: [{ messageId: 'missingEffectReturn' }],
     },
     {
       code: `export function foo(): number { return 42 }`,
-      errors: [{ messageId: "missingEffectReturn" }],
+      errors: [{ messageId: 'missingEffectReturn' }],
     },
     {
       code: `export const foo = () => 42`,
-      errors: [{ messageId: "missingEffectReturn" }],
+      errors: [{ messageId: 'missingEffectReturn' }],
     },
     {
       code: `export const foo = (): number => 42`,
-      errors: [{ messageId: "missingEffectReturn" }],
+      errors: [{ messageId: 'missingEffectReturn' }],
     },
   ],
 })
