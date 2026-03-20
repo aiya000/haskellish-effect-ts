@@ -18,7 +18,7 @@ const result = pipe(arr, Array.filter((x) => x > 0), Array.map((x) => x * 2))
 
 ### Step 2: Understand `Option` (replacing null/undefined)
 ```typescript
-import { Option, pipe } from 'haskellish-effect'
+import { Option, pipe, Array } from 'haskellish-effect'
 
 // Instead of: const head = arr[0]; // might be undefined!
 const head = pipe(arr, Array.head) // Option<number>
