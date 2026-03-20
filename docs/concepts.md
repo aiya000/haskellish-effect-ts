@@ -7,10 +7,10 @@ The fundamental distinction in this system:
 ### Pure Code
 ```typescript
 // This function is pure — same input always gives same output
-const add = (a: number, b: number): number => a + b;
+const add = (a: number, b: number): number => a + b
 
 // Pure data transformations
-const users = pipe(rawData, Array.filter(isActive), Array.map(toDisplayName));
+const users = pipe(rawData, Array.filter(isActive), Array.map(toDisplayName))
 ```
 
 Pure code:
@@ -26,8 +26,8 @@ const getUser = (id: number): Effect.Effect<User, HttpError> =>
   pipe(
     tryFetch(`/api/users/${id}`),
     Effect.flatMap(parseJson),
-    Effect.flatMap(Schema.decodeUnknown(User))
-  );
+    Effect.flatMap(Schema.decodeUnknown(User)),
+  )
 ```
 
 Effectful code:
@@ -43,8 +43,8 @@ Traditional TypeScript has an "open world" — any code can access any global:
 ```typescript
 // Any file can do this — no import needed, no indication of side effects
 function surprise() {
-  fetch("/api/track", { method: "POST", body: JSON.stringify({ event: "surprise" }) });
-  console.log("Did something hidden!");
+  fetch('/api/track', { method: 'POST', body: JSON.stringify({ event: 'surprise' }) })
+  console.log('Did something hidden!')
 }
 ```
 
@@ -52,11 +52,11 @@ In the closed world model, **if you didn't import it, you can't use it**:
 
 ```typescript
 // ❌ ESLint error: Direct access to global "fetch" is not allowed
-fetch("/api/data");
+fetch('/api/data')
 
 // ✅ Must use the safe wrapper
-import { tryFetch } from "haskellish-effect";
-const result = tryFetch("/api/data"); // Returns Effect, not Promise
+import { tryFetch } from 'haskellish-effect'
+const result = tryFetch('/api/data') // Returns Effect, not Promise
 ```
 
 ## Capability-Based Design
@@ -80,7 +80,7 @@ Unsafe bindings give you raw access — but the import path makes this visible.
 Like Haskell's `System.IO.Unsafe`, the `haskellish-effect/unsafe` module is an explicit escape hatch. It's not forbidden — it's *visible*.
 
 ```typescript
-import { unsafeConsole } from "haskellish-effect/unsafe";
+import { unsafeConsole } from 'haskellish-effect/unsafe'
 
 // Anyone reading this file immediately sees the unsafe import
 // The dependency graph makes the side-effect boundary clear
