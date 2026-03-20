@@ -26,7 +26,10 @@ ruleTester.run('no-mutation', noMutation, {
     },
     {
       code: `let x; x = 42`,
-      errors: [{ messageId: 'noMutableDeclaration' }, { messageId: 'noAssignment' }],
+      errors: [
+        { messageId: 'noMutableDeclaration' },
+        { messageId: 'noAssignment' },
+      ],
     },
     {
       code: `const x = 1; const obj = { a: x }; obj.a = 2`,
@@ -46,19 +49,31 @@ ruleTester.run('no-mutation', noMutation, {
     },
     {
       code: `let i = 0; i++`,
-      errors: [{ messageId: 'noMutableDeclaration' }, { messageId: 'noUpdateExpression' }],
+      errors: [
+        { messageId: 'noMutableDeclaration' },
+        { messageId: 'noUpdateExpression' },
+      ],
     },
     {
       code: `let i = 0; i--`,
-      errors: [{ messageId: 'noMutableDeclaration' }, { messageId: 'noUpdateExpression' }],
+      errors: [
+        { messageId: 'noMutableDeclaration' },
+        { messageId: 'noUpdateExpression' },
+      ],
     },
     {
       code: `let i = 0; ++i`,
-      errors: [{ messageId: 'noMutableDeclaration' }, { messageId: 'noUpdateExpression' }],
+      errors: [
+        { messageId: 'noMutableDeclaration' },
+        { messageId: 'noUpdateExpression' },
+      ],
     },
     {
       code: `for (let i = 0; i < 10; i++) {}`,
-      errors: [{ messageId: 'noMutableDeclaration' }, { messageId: 'noUpdateExpression' }],
+      errors: [
+        { messageId: 'noMutableDeclaration' },
+        { messageId: 'noUpdateExpression' },
+      ],
     },
   ],
 })
