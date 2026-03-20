@@ -5,6 +5,7 @@ import { capabilityEnforcement } from './rules/capability-enforcement.js'
 import { noPromise } from './rules/no-promise.js'
 import { noExplicitAny } from './rules/no-explicit-any.js'
 import { effectBoundary } from './rules/effect-boundary.js'
+import { noThrow } from './rules/no-throw.js'
 
 const rules = {
   'only-allowed-imports': onlyAllowedImports,
@@ -14,6 +15,7 @@ const rules = {
   'no-promise': noPromise,
   'no-explicit-any': noExplicitAny,
   'effect-boundary': effectBoundary,
+  'no-throw': noThrow,
 }
 
 const plugin: {
@@ -41,6 +43,7 @@ const recommended = {
     'haskellish-effect/capability-enforcement': 'warn' as const,
     'haskellish-effect/no-promise': 'warn' as const,
     'haskellish-effect/no-explicit-any': 'warn' as const,
+    'haskellish-effect/no-throw': 'warn' as const,
   },
 }
 
@@ -56,6 +59,7 @@ const strict = {
     'haskellish-effect/no-promise': 'error' as const,
     'haskellish-effect/no-explicit-any': 'error' as const,
     'haskellish-effect/effect-boundary': 'error' as const,
+    'haskellish-effect/no-throw': 'error' as const,
   },
 }
 
