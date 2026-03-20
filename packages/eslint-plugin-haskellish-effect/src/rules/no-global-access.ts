@@ -1,5 +1,5 @@
-import type { Scope } from "@typescript-eslint/utils/ts-eslint";
-import { createRule } from "../utils/create-rule.js";
+import type { Scope } from "@typescript-eslint/utils/ts-eslint"
+import { createRule } from "../utils/create-rule.js"
 
 const DEFAULT_BLOCKED_GLOBALS = [
   "fetch",
@@ -35,35 +35,39 @@ const DEFAULT_BLOCKED_GLOBALS = [
   "queueMicrotask",
   "requestAnimationFrame",
   "cancelAnimationFrame",
-];
+]
 
-type Options = [{ blocked?: string[]; additionalBlocked?: string[] }];
-type MessageIds = "blockedGlobal";
+type Options = [{ blocked?: string[]; additionalBlocked?: string[] }]
+type MessageIds = "blockedGlobal"
 
 function collectGlobalReferences(scope: Scope.Scope, blockedSet: Set<string>) {
-  const results: Scope.Reference[] = [];
+  const results: Scope.Reference[] = []
 
   // Check unresolved references (scope.through)
   for (const ref of scope.through) {
     if (blockedSet.has(ref.identifier.name)) {
-      results.push(ref);
+      results.push(ref)
     }
   }
 
   // Check resolved references that resolve to implicit globals (0 defs)
   function walk(s: Scope.Scope) {
     for (const ref of s.references) {
-      if (ref.resolved && ref.resolved.defs.length === 0 && blockedSet.has(ref.identifier.name)) {
-        results.push(ref);
+      if (
+        ref.resolved &&
+        ref.resolved.defs.length === 0 &&
+        blockedSet.has(ref.identifier.name)
+      ) {
+        results.push(ref)
       }
     }
     for (const child of s.childScopes) {
-      walk(child);
+      walk(child)
     }
   }
-  walk(scope);
+  walk(scope)
 
-  return results;
+  return results
 }
 
 export const noGlobalAccess = createRule<Options, MessageIds>({
@@ -96,32 +100,32 @@ export const noGlobalAccess = createRule<Options, MessageIds>({
   },
   defaultOptions: [{}],
   create(context) {
-    const [options] = context.options;
+    const [options] = context.options
     const blockedSet = new Set(
       options?.blocked ?? [
         ...DEFAULT_BLOCKED_GLOBALS,
         ...(options?.additionalBlocked ?? []),
-      ]
-    );
+      ],
+    )
     if (options?.blocked && options?.additionalBlocked) {
       for (const name of options.additionalBlocked) {
-        blockedSet.add(name);
+        blockedSet.add(name)
       }
     }
 
     return {
       "Program:exit"(node) {
-        const scope = context.sourceCode.getScope(node);
-        const refs = collectGlobalReferences(scope, blockedSet);
+        const scope = context.sourceCode.getScope(node)
+        const refs = collectGlobalReferences(scope, blockedSet)
 
         for (const ref of refs) {
           context.report({
             node: ref.identifier,
             messageId: "blockedGlobal",
             data: { name: ref.identifier.name },
-          });
+          })
         }
       },
-    };
+    }
   },
-});
+})

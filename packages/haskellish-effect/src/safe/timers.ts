@@ -1,23 +1,23 @@
-import { Effect } from "effect";
+import { Effect } from "effect"
 
 export const safeSetTimeout = (delay: number): Effect.Effect<void> =>
   Effect.async<void>((resume) => {
     const id = setTimeout(() => {
-      resume(Effect.void);
-    }, delay);
+      resume(Effect.void)
+    }, delay)
     return Effect.sync(() => {
-      clearTimeout(id);
-    });
-  });
+      clearTimeout(id)
+    })
+  })
 
 export const safeSetInterval = (
   callback: () => void,
-  interval: number
+  interval: number,
 ): Effect.Effect<void, never, never> =>
   Effect.async<void>((resume) => {
-    const id = setInterval(callback, interval);
+    const id = setInterval(callback, interval)
     return Effect.sync(() => {
-      clearInterval(id);
-      resume(Effect.void);
-    });
-  });
+      clearInterval(id)
+      resume(Effect.void)
+    })
+  })

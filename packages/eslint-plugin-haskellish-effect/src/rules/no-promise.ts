@@ -1,7 +1,7 @@
-import { createRule } from "../utils/create-rule.js";
+import { createRule } from "../utils/create-rule.js"
 
-type Options = [];
-type MessageIds = "noAsync" | "noNewPromise" | "noPromiseStatic";
+type Options = []
+type MessageIds = "noAsync" | "noNewPromise" | "noPromiseStatic"
 
 export const noPromise = createRule<Options, MessageIds>({
   name: "no-promise",
@@ -14,8 +14,7 @@ export const noPromise = createRule<Options, MessageIds>({
     messages: {
       noAsync:
         "async functions are not allowed. Use Effect.gen or Effect.tryPromise instead.",
-      noNewPromise:
-        "new Promise() is not allowed. Use Effect.async instead.",
+      noNewPromise: "new Promise() is not allowed. Use Effect.async instead.",
       noPromiseStatic:
         "Promise.{{method}}() is not allowed. Use the Effect equivalent instead.",
     },
@@ -26,17 +25,17 @@ export const noPromise = createRule<Options, MessageIds>({
     return {
       FunctionDeclaration(node) {
         if (node.async) {
-          context.report({ node, messageId: "noAsync" });
+          context.report({ node, messageId: "noAsync" })
         }
       },
       FunctionExpression(node) {
         if (node.async) {
-          context.report({ node, messageId: "noAsync" });
+          context.report({ node, messageId: "noAsync" })
         }
       },
       ArrowFunctionExpression(node) {
         if (node.async) {
-          context.report({ node, messageId: "noAsync" });
+          context.report({ node, messageId: "noAsync" })
         }
       },
       NewExpression(node) {
@@ -44,7 +43,7 @@ export const noPromise = createRule<Options, MessageIds>({
           node.callee.type === "Identifier" &&
           node.callee.name === "Promise"
         ) {
-          context.report({ node, messageId: "noNewPromise" });
+          context.report({ node, messageId: "noNewPromise" })
         }
       },
       MemberExpression(node) {
@@ -59,9 +58,9 @@ export const noPromise = createRule<Options, MessageIds>({
             node,
             messageId: "noPromiseStatic",
             data: { method: node.property.name },
-          });
+          })
         }
       },
-    };
+    }
   },
-});
+})

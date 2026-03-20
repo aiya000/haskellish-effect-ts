@@ -5,6 +5,11 @@
   "scripts": {
     "build": "bun run --filter 'packages/*' build",
     "test": "bun run --filter 'packages/*' test",
-    "typecheck": "bun run --filter 'packages/*' typecheck"
+    "typecheck": "bun run --filter 'packages/*' typecheck",
+    "format": "prettier --write '**/*.{ts,js}'",
+    "format:check": "prettier --check '**/*.{ts,js}'"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
   }
 }

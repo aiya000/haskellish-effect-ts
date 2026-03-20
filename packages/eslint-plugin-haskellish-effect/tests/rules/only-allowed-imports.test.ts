@@ -1,8 +1,8 @@
-import "../setup.js";
-import { RuleTester } from "@typescript-eslint/rule-tester";
-import { onlyAllowedImports } from "../../src/rules/only-allowed-imports.js";
+import "../setup.js"
+import { RuleTester } from "@typescript-eslint/rule-tester"
+import { onlyAllowedImports } from "../../src/rules/only-allowed-imports.js"
 
-const ruleTester = new RuleTester();
+const ruleTester = new RuleTester()
 
 ruleTester.run("only-allowed-imports", onlyAllowedImports, {
   valid: [
@@ -47,4 +47,4 @@ ruleTester.run("only-allowed-imports", onlyAllowedImports, {
       errors: [{ messageId: "disallowedImport" }],
     },
   ],
-});
+})

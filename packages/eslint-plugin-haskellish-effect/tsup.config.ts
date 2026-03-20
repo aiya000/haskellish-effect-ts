@@ -1,4 +1,4 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsup"
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -7,4 +7,4 @@ export default defineConfig({
   splitting: false,
   clean: true,
   external: ["eslint", "@typescript-eslint/utils"],
-});
+})

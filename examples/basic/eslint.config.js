@@ -1,4 +1,4 @@
-import { recommended } from "haskellish-effect-config";
+import { recommended } from "haskellish-effect-config"
 
 export default [
   ...recommended,
@@ -33,4 +33,4 @@ export default [
       "@typescript-eslint/no-unsafe-call": "off",
     },
   },
-];
+]

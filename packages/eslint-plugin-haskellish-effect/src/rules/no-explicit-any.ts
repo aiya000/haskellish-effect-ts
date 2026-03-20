@@ -1,7 +1,7 @@
-import { createRule } from "../utils/create-rule.js";
+import { createRule } from "../utils/create-rule.js"
 
-type Options = [];
-type MessageIds = "noAny";
+type Options = []
+type MessageIds = "noAny"
 
 export const noExplicitAny = createRule<Options, MessageIds>({
   name: "no-explicit-any",
@@ -20,8 +20,8 @@ export const noExplicitAny = createRule<Options, MessageIds>({
   create(context) {
     return {
       TSAnyKeyword(node) {
-        context.report({ node, messageId: "noAny" });
+        context.report({ node, messageId: "noAny" })
       },
-    };
+    }
   },
-});
+})

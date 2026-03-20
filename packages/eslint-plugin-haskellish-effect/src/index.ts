@@ -1,10 +1,10 @@
-import { onlyAllowedImports } from "./rules/only-allowed-imports.js";
-import { noGlobalAccess } from "./rules/no-global-access.js";
-import { noImplicitGlobalThis } from "./rules/no-implicit-globalthis.js";
-import { capabilityEnforcement } from "./rules/capability-enforcement.js";
-import { noPromise } from "./rules/no-promise.js";
-import { noExplicitAny } from "./rules/no-explicit-any.js";
-import { effectBoundary } from "./rules/effect-boundary.js";
+import { onlyAllowedImports } from "./rules/only-allowed-imports.js"
+import { noGlobalAccess } from "./rules/no-global-access.js"
+import { noImplicitGlobalThis } from "./rules/no-implicit-globalthis.js"
+import { capabilityEnforcement } from "./rules/capability-enforcement.js"
+import { noPromise } from "./rules/no-promise.js"
+import { noExplicitAny } from "./rules/no-explicit-any.js"
+import { effectBoundary } from "./rules/effect-boundary.js"
 
 const rules = {
   "only-allowed-imports": onlyAllowedImports,
@@ -14,12 +14,12 @@ const rules = {
   "no-promise": noPromise,
   "no-explicit-any": noExplicitAny,
   "effect-boundary": effectBoundary,
-};
+}
 
 const plugin: {
-  meta: { name: string; version: string };
-  rules: typeof rules;
-  configs: Record<string, unknown>;
+  meta: { name: string; version: string }
+  rules: typeof rules
+  configs: Record<string, unknown>
 } = {
   meta: {
     name: "eslint-plugin-haskellish-effect",
@@ -27,7 +27,7 @@ const plugin: {
   },
   rules,
   configs: {},
-};
+}
 
 // Flat configs need a reference to the plugin itself
 const recommended = {
@@ -42,7 +42,7 @@ const recommended = {
     "haskellish-effect/no-promise": "warn" as const,
     "haskellish-effect/no-explicit-any": "warn" as const,
   },
-};
+}
 
 const strict = {
   plugins: {
@@ -57,9 +57,9 @@ const strict = {
     "haskellish-effect/no-explicit-any": "error" as const,
     "haskellish-effect/effect-boundary": "error" as const,
   },
-};
+}
 
-Object.assign(plugin.configs, { recommended, strict });
+Object.assign(plugin.configs, { recommended, strict })
 
-export default plugin;
-export { rules, recommended, strict };
+export default plugin
+export { rules, recommended, strict }
