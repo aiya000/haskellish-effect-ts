@@ -4,12 +4,12 @@
  * is a clear signal that this module performs side effects.
  */
 import { Effect } from 'haskellish-effect'
-import { unsafeConsole, unsafeDate } from 'haskellish-effect/unsafe'
+import { unsafeConsole, UnsafeDate } from 'haskellish-effect/unsafe'
 
 // This function explicitly uses unsafe bindings — the import makes it obvious
 export const logWithTimestamp = (message: string): Effect.Effect<void> =>
   Effect.sync(() => {
-    const now = new unsafeDate()
+    const now = new UnsafeDate()
     unsafeConsole.log(`[${now.toISOString()}] ${message}`)
   })
 

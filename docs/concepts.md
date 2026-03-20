@@ -68,7 +68,7 @@ Each capability (network, console, time, randomness) must be explicitly acquired
 | HTTP | `tryFetch` from `haskellish-effect` | `unsafeFetch` from `haskellish-effect/unsafe` |
 | Console | `consoleLog`, `consoleWarn`, `consoleError`, etc. from `haskellish-effect` | `unsafeConsole` from `haskellish-effect/unsafe` |
 | JSON | `jsonParse`, `jsonStringify` from `haskellish-effect` | `unsafeJSON` from `haskellish-effect/unsafe` |
-| Time | `safeNow`, `safeDate` from `haskellish-effect` | `unsafeDate` from `haskellish-effect/unsafe` |
+| Time | `safeNow`, `safeDate` from `haskellish-effect` | `UnsafeDate` from `haskellish-effect/unsafe` |
 | Randomness | `safeRandom` from `haskellish-effect` | `unsafeMath` from `haskellish-effect/unsafe` |
 | Timers | `safeSetTimeout`, `safeSetInterval` from `haskellish-effect` | `unsafeSetTimeout` from `haskellish-effect/unsafe` |
 
