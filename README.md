@@ -84,6 +84,7 @@ const greet = (name: string): string => `Hello, ${name}!`;
 - [Core Concepts](./docs/concepts.md) — Pure vs Effect, closed world, capability-based design
 - [Learning Path](./docs/learning-path.md) — Guides for both Haskell experts and TypeScript developers
 - [Usage Guide](./docs/usage-guide.md) — Installation, configuration, migration
+- [Examples](./examples) — Working example projects to help you get started
 
 ## License
 
