@@ -18,7 +18,7 @@ export const unsafeMath: typeof Math = Math
 
 export const unsafeJSON: typeof JSON = JSON
 
-export const unsafeDate: typeof Date = Date
+export const UnsafeDate: typeof Date = Date
 
 export const unsafeSetTimeout: typeof setTimeout = setTimeout
 
@@ -26,4 +26,4 @@ export const unsafeSetInterval: typeof setInterval = setInterval
 
 export const unsafeCrypto: typeof crypto = crypto
 
-export const unsafePromise: typeof Promise = Promise
+export const UnsafePromise: typeof Promise = Promise
