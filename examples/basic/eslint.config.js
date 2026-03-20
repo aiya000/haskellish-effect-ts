@@ -27,6 +27,7 @@ export default [
       'haskellish-effect/capability-enforcement': 'off',
       'haskellish-effect/no-promise': 'off',
       'haskellish-effect/no-explicit-any': 'off',
+      'haskellish-effect/no-mutation': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',

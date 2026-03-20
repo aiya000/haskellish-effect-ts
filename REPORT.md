@@ -6,11 +6,11 @@ Haskell的な規律をTypeScriptに持ち込むOSSライブラリスイートを
 
 ## 構成パッケージ
 
-| パッケージ | 役割 |
-|-----------|------|
-| `haskellish-effect` | Effect-TSの制御されたre-export + 安全なラッパー関数 |
-| `eslint-plugin-haskellish-effect` | 7つのESLintルールで規律を強制 |
-| `haskellish-effect-config` | typescript-eslint + haskellishプラグインの統合設定 |
+| パッケージ                        | 役割                                                |
+| --------------------------------- | --------------------------------------------------- |
+| `haskellish-effect`               | Effect-TSの制御されたre-export + 安全なラッパー関数 |
+| `eslint-plugin-haskellish-effect` | 8つのESLintルールで規律を強制                       |
+| `haskellish-effect-config`        | typescript-eslint + haskellishプラグインの統合設定  |
 
 ## 実装したESLintルール
 
@@ -21,19 +21,24 @@ Haskell的な規律をTypeScriptに持ち込むOSSライブラリスイートを
 5. **no-promise** — `async/await`と`new Promise()`を禁止（Effectを使う）
 6. **no-explicit-any** — `any`型注釈を禁止
 7. **effect-boundary** — エクスポートされた関数にEffect戻り値型を要求（strictモード）
+8. **no-mutation** — `let`/`var`宣言・再代入・`++`/`--`を禁止（Refで状態管理）
 
 ## 主要な設計判断
 
 ### `effect`の直接importを禁止
+
 すべてのアクセスは`haskellish-effect`経由。これにより、どのモジュールが副作用を持つかが依存グラフから可視化されます。
 
 ### unsafeバウンダリの明示化
+
 `haskellish-effect/unsafe`からのimportは、Haskellの`System.IO.Unsafe`に相当。副作用のあるグローバルへのアクセスが必要な場合、importパスでそれが明示されます。
 
 ### スコープ分析によるグローバル検出
+
 ESLintのスコープ分析を活用し、`scope.through`（未解決参照）と暗黙的グローバル（解決済みだが定義が0個の変数）の両方を検出します。`Math`や`Date`などのビルトイングローバルも確実に検出します。
 
 ### 純粋なグローバルの許可リスト
+
 `Array`, `Object`, `String`, `Number`, `Map`, `Set`, `Error`, `ReadonlyArray`等の純粋な型・コンストラクタはグローバルアクセスを許可。副作用を持つもの（`fetch`, `console`, `Date`, `Math`）のみをブロックします。
 
 ## 検証結果
@@ -46,18 +51,21 @@ ESLintのスコープ分析を活用し、`scope.through`（未解決参照）�
 ## 次にやるべきこと
 
 ### 公開準備
+
 1. `npm publish`（または`bun publish`）で3パッケージを公開
 2. GitHubリポジトリの作成とCI設定（GitHub Actions）
 3. CHANGELOGとリリースノートの整備
 
 ### カスタマイズ
+
 - `allowedPackages`オプションでプロジェクト固有の外部パッケージを許可
 - `allowedGlobals`オプションで追加のグローバルを許可
 - `recommended`と`strict`プリセットの選択
 
 ### 拡張
+
 - `no-throw`ルール（`throw`文の禁止）の追加
-- `no-mutation`ルール（再代入の禁止）の追加
+- ~~`no-mutation`ルール（再代入の禁止）の追加~~ ✅ 実装済み
 - VS Code拡張との統合（エディタ内リアルタイムフィードバック）
 - Effect-TS公式のStream/Layer/Schedulerサービスのラッパー追加
 

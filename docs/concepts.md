@@ -5,6 +5,7 @@
 The fundamental distinction in this system:
 
 ### Pure Code
+
 ```typescript
 // This function is pure — same input always gives same output
 const add = (a: number, b: number): number => a + b
@@ -14,12 +15,14 @@ const users = pipe(rawData, Array.filter(isActive), Array.map(toDisplayName))
 ```
 
 Pure code:
+
 - Has no side effects
 - Is referentially transparent (can be replaced with its result)
 - Is easy to test (just check input → output)
 - Can be freely memoized, parallelized, or reordered
 
 ### Effectful Code
+
 ```typescript
 // This function describes a side effect — it doesn't execute it yet
 const getUser = (id: number): Effect.Effect<User, HttpError> =>
@@ -31,7 +34,8 @@ const getUser = (id: number): Effect.Effect<User, HttpError> =>
 ```
 
 Effectful code:
-- Returns `Effect<A, E, R>` — a *description* of what to do
+
+- Returns `Effect<A, E, R>` — a _description_ of what to do
 - The `E` type parameter tells you what can go wrong
 - The `R` type parameter tells you what dependencies are needed
 - Nothing happens until you call `Effect.runPromise`
@@ -43,7 +47,10 @@ Traditional TypeScript has an "open world" — any code can access any global:
 ```typescript
 // Any file can do this — no import needed, no indication of side effects
 function surprise() {
-  fetch('/api/track', { method: 'POST', body: JSON.stringify({ event: 'surprise' }) })
+  fetch('/api/track', {
+    method: 'POST',
+    body: JSON.stringify({ event: 'surprise' }),
+  })
   console.log('Did something hidden!')
 }
 ```
@@ -63,21 +70,23 @@ const result = tryFetch('/api/data') // Returns Effect, not Promise
 
 Each capability (network, console, time, randomness) must be explicitly acquired:
 
-| Capability | Safe Import | Unsafe Import |
-|-----------|------------|---------------|
-| HTTP | `tryFetch` from `haskellish-effect` | `unsafeFetch` from `haskellish-effect/unsafe` |
-| Console | `consoleLog`, `consoleWarn`, `consoleError`, etc. from `haskellish-effect` | `unsafeConsole` from `haskellish-effect/unsafe` |
-| JSON | `jsonParse`, `jsonStringify` from `haskellish-effect` | `unsafeJSON` from `haskellish-effect/unsafe` |
-| Time | `safeNow`, `safeDate` from `haskellish-effect` | `UnsafeDate` from `haskellish-effect/unsafe` |
-| Randomness | `safeRandom` from `haskellish-effect` | `unsafeMath` from `haskellish-effect/unsafe` |
-| Timers | `safeSetTimeout`, `safeSetInterval` from `haskellish-effect` | `unsafeSetTimeout` from `haskellish-effect/unsafe` |
+| Capability           | Safe Import                                                                   | Unsafe Import                                       |
+| -------------------- | ----------------------------------------------------------------------------- | --------------------------------------------------- |
+| HTTP                 | `tryFetch` from `haskellish-effect`                                           | `unsafeFetch` from `haskellish-effect/unsafe`       |
+| Console              | `consoleLog`, `consoleWarn`, `consoleError`, etc. from `haskellish-effect`    | `unsafeConsole` from `haskellish-effect/unsafe`     |
+| JSON                 | `jsonParse`, `jsonStringify` from `haskellish-effect`                         | `unsafeJSON` from `haskellish-effect/unsafe`        |
+| Time                 | `safeNow`, `safeDate` from `haskellish-effect`                                | `UnsafeDate` from `haskellish-effect/unsafe`        |
+| Randomness           | `safeRandom` from `haskellish-effect`                                         | `unsafeMath` from `haskellish-effect/unsafe`        |
+| Timers               | `safeSetTimeout`, `safeSetInterval` from `haskellish-effect`                  | `unsafeSetTimeout` from `haskellish-effect/unsafe`  |
+| Mutable State        | `newIORef`, `readIORef`, `writeIORef`, `modifyIORef` from `haskellish-effect` | `let`/`var` declarations (blocked by `no-mutation`) |
+| Stateful Computation | `runState`, `getState`, `putState`, `modifyState` from `haskellish-effect`    | Reassignment (blocked by `no-mutation`)             |
 
 Safe wrappers return `Effect` values — the side effect is tracked in the type system.
 Unsafe bindings give you raw access — but the import path makes this visible.
 
 ## Unsafe Boundaries
 
-Like Haskell's `System.IO.Unsafe`, the `haskellish-effect/unsafe` module is an explicit escape hatch. It's not forbidden — it's *visible*.
+Like Haskell's `System.IO.Unsafe`, the `haskellish-effect/unsafe` module is an explicit escape hatch. It's not forbidden — it's _visible_.
 
 ```typescript
 import { unsafeConsole } from 'haskellish-effect/unsafe'
@@ -87,6 +96,53 @@ import { unsafeConsole } from 'haskellish-effect/unsafe'
 ```
 
 Rules of thumb:
+
 1. **Prefer safe wrappers** — they compose with Effect and provide error typing
 2. **Use unsafe bindings at the boundary** — logging, debugging, FFI
 3. **Never hide unsafe in a "pure-looking" module** — the import should be in the file that uses it
+
+## State Management (IORef & State)
+
+When the `no-mutation` rule is enabled, `let`/`var` declarations and reassignment are banned. Instead, use `IORef` or `State` from `haskellish-effect` for managed mutable state — equivalent to Haskell's `IORef` and `State` monad:
+
+### IORef — A Mutable Reference in Effect
+
+```typescript
+import {
+  Effect,
+  newIORef,
+  readIORef,
+  writeIORef,
+  modifyIORef,
+} from 'haskellish-effect'
+
+const program = Effect.gen(function* () {
+  const counter = yield* newIORef(0) // create a new ref
+  yield* modifyIORef(counter, (n) => n + 1) // update with a pure function
+  yield* writeIORef(counter, 42) // overwrite with a value
+  return yield* readIORef(counter) // read the current value → 42
+})
+```
+
+### State — Stateful Computations
+
+```typescript
+import {
+  Effect,
+  runState,
+  getState,
+  putState,
+  modifyState,
+} from 'haskellish-effect'
+
+// runState returns [result, finalState]
+const computation = runState(0, (ref) =>
+  Effect.gen(function* () {
+    yield* modifyState(ref, (s) => s + 10)
+    yield* putState(ref, 42)
+    return yield* getState(ref)
+  }),
+) // Effect producing [42, 42]
+```
+
+Both APIs keep mutable state inside `Effect`, making it explicit and composable without needing `let` or reassignment.

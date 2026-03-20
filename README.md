@@ -21,11 +21,11 @@ This project makes the invisible visible: **if a function has side effects, the 
 
 ## Packages
 
-| Package | Description |
-|---------|------------|
-| [`haskellish-effect`](./packages/haskellish-effect) | Controlled re-exports of Effect-TS with safe wrappers |
-| [`eslint-plugin-haskellish-effect`](./packages/eslint-plugin-haskellish-effect) | ESLint rules enforcing closed-world discipline |
-| [`haskellish-effect-config`](./packages/haskellish-effect-config) | One-import ESLint configs (recommended + strict) |
+| Package                                                                         | Description                                           |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| [`haskellish-effect`](./packages/haskellish-effect)                             | Controlled re-exports of Effect-TS with safe wrappers |
+| [`eslint-plugin-haskellish-effect`](./packages/eslint-plugin-haskellish-effect) | ESLint rules enforcing closed-world discipline        |
+| [`haskellish-effect-config`](./packages/haskellish-effect-config)               | One-import ESLint configs (recommended + strict)      |
 
 ## Quick Start
 
@@ -43,7 +43,10 @@ export default [
   ...recommended,
   {
     languageOptions: {
-      parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
   },
 ]
@@ -60,7 +63,9 @@ const User = Schema.Struct({ id: Schema.Number, name: Schema.String })
 const getUser = (id: number) =>
   pipe(
     tryFetch(`/api/users/${id}`),
-    Effect.flatMap((r) => Effect.tryPromise({ try: () => r.text(), catch: (e) => e })),
+    Effect.flatMap((r) =>
+      Effect.tryPromise({ try: () => r.text(), catch: (e) => e }),
+    ),
     Effect.flatMap(jsonParse),
     Effect.flatMap(Schema.decodeUnknown(User)),
   )
@@ -69,17 +74,50 @@ const getUser = (id: number) =>
 const greet = (name: string): string => `Hello, ${name}!`
 ```
 
+### Managed State (with `no-mutation` enabled)
+
+When the `no-mutation` rule is active, `let` and reassignment are banned. Use `IORef` or `State` for mutable state:
+
+```typescript
+import {
+  Effect,
+  newIORef,
+  readIORef,
+  modifyIORef,
+  runState,
+  modifyState,
+  getState,
+} from 'haskellish-effect'
+
+// IORef: a mutable reference managed within Effect
+const counter = Effect.gen(function* () {
+  const ref = yield* newIORef(0)
+  yield* modifyIORef(ref, (n) => n + 1)
+  yield* modifyIORef(ref, (n) => n + 1)
+  return yield* readIORef(ref) // 2
+})
+
+// State: run a stateful computation and get the result and final state
+const stateful = runState(0, (ref) =>
+  Effect.gen(function* () {
+    yield* modifyState(ref, (s) => s + 10)
+    return yield* getState(ref)
+  }),
+) // Effect producing [10, 10]
+```
+
 ## ESLint Rules
 
-| Rule | What it enforces |
-|------|-----------------|
-| `only-allowed-imports` | Blocks direct `effect` imports and unknown packages |
-| `no-global-access` | Blocks `fetch`, `console`, `Date`, `Math`, etc. |
-| `no-implicit-globalthis` | Blocks `globalThis`, `window`, `document`, `self` |
-| `capability-enforcement` | Central closed-world rule — all bindings must be traceable |
-| `no-promise` | Blocks `async/await` and `new Promise()` — use Effect |
-| `no-explicit-any` | Blocks `any` type annotations |
-| `effect-boundary` | Exported functions should return Effect (strict mode) |
+| Rule                     | What it enforces                                                    |
+| ------------------------ | ------------------------------------------------------------------- |
+| `only-allowed-imports`   | Blocks direct `effect` imports and unknown packages                 |
+| `no-global-access`       | Blocks `fetch`, `console`, `Date`, `Math`, etc.                     |
+| `no-implicit-globalthis` | Blocks `globalThis`, `window`, `document`, `self`                   |
+| `capability-enforcement` | Central closed-world rule — all bindings must be traceable          |
+| `no-promise`             | Blocks `async/await` and `new Promise()` — use Effect               |
+| `no-explicit-any`        | Blocks `any` type annotations                                       |
+| `no-mutation`            | Blocks `let`/`var`, reassignment, `++`/`--` — use `const` and `Ref` |
+| `effect-boundary`        | Exported functions should return Effect (strict mode)               |
 
 ## Documentation
 

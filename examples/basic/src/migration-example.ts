@@ -85,3 +85,33 @@ void formatTimestamp_before
 void fetchUser_after
 void processUser_after
 void formatTimestamp_after
+
+// ============================================================
+// BEFORE: Mutable state (blocked by no-mutation rule)
+// ============================================================
+
+function sumArray_before(arr: number[]): number {
+  let total = 0
+  for (let i = 0; i < arr.length; i++) {
+    total += arr[i]!
+  }
+  return total
+}
+
+// ============================================================
+// AFTER: Managed state via IORef (no-mutation compliant)
+// ============================================================
+
+import { newIORef, readIORef, modifyIORef } from 'haskellish-effect'
+
+const sumArray_after = (arr: ReadonlyArray<number>): Effect.Effect<number> =>
+  Effect.gen(function* () {
+    const total = yield* newIORef(0)
+    for (const n of arr) {
+      yield* modifyIORef(total, (t) => t + n)
+    }
+    return yield* readIORef(total)
+  })
+
+void sumArray_before
+void sumArray_after
