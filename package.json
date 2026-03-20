@@ -6,7 +6,7 @@
     "build": "bun run --filter 'packages/*' build",
     "test": "bun run --filter 'packages/*' test",
     "typecheck": "bun run --filter 'packages/*' typecheck",
-    "lint": "eslint 'packages/*/src/**/*.ts'",
+    "lint": "eslint \"packages/**/*.ts\"",
     "format": "prettier --write '**/*.{ts,js}'",
     "format:check": "prettier --check '**/*.{ts,js}'",
     "prepare": "husky"
