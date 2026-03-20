@@ -3,9 +3,9 @@
   "private": true,
   "workspaces": ["packages/*", "examples/*"],
   "scripts": {
-    "build": "bun run --filter 'packages/*' build",
-    "test": "bun run --filter 'packages/*' test",
-    "typecheck": "bun run --filter 'packages/*' typecheck",
+    "build": "bun run --filter './packages/*' build",
+    "test": "bun run --filter './packages/*' test",
+    "typecheck": "bun run --filter './packages/*' typecheck",
     "lint": "eslint \"packages/**/*.ts\"",
     "format": "prettier --write '**/*.{ts,js}'",
     "format:check": "prettier --check '**/*.{ts,js}'",
