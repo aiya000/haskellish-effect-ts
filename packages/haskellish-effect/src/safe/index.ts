@@ -8,3 +8,23 @@ export {
 export { safeSetTimeout, safeSetInterval } from "./timers.js"
 export { safeRandom } from "./random.js"
 export { safeNow, safeDate } from "./date.js"
+export {
+  consoleLog,
+  consoleWarn,
+  consoleError,
+  consoleInfo,
+  consoleDebug,
+  consoleTrace,
+  consoleDir,
+  consoleTable,
+  consoleTime,
+  consoleTimeEnd,
+  consoleTimeLog,
+  consoleGroup,
+  consoleGroupEnd,
+  consoleGroupCollapsed,
+  consoleCount,
+  consoleCountReset,
+  consoleClear,
+  consoleAssert,
+} from "./console.js"

@@ -111,6 +111,18 @@ export const debugLog = (msg: string): Effect.Effect<void> =>
 
 The import from `haskellish-effect/unsafe` makes the boundary visible to code reviewers and the dependency graph.
 
+> **Tip:** For common console operations, prefer the safe wrappers instead of `unsafeConsole`:
+>
+> ```typescript
+> import { Effect, consoleLog, consoleWarn, consoleError } from "haskellish-effect";
+>
+> export const program = Effect.gen(function* () {
+>   yield* consoleLog("Starting...");
+>   yield* consoleWarn("Watch out!");
+>   yield* consoleError("Something went wrong");
+> });
+> ```
+
 ## Configuring Allowed Packages
 
 If you need third-party packages (e.g., `zod`, `drizzle-orm`):
@@ -165,11 +177,13 @@ const getUser = (id: number) =>
 // Before
 const now = Date.now();
 const data = JSON.parse(raw);
+console.log("hello");
 
 // After
-import { safeNow, jsonParse } from "haskellish-effect";
-const now = safeNow;         // Effect<number>
-const data = jsonParse(raw);  // Effect<unknown, JsonParseError>
+import { safeNow, jsonParse, consoleLog } from "haskellish-effect";
+const now = safeNow;              // Effect<number>
+const data = jsonParse(raw);       // Effect<unknown, JsonParseError>
+const log = consoleLog("hello");   // Effect<void>
 ```
 
 ### Step 5: Escalate to `error` level
