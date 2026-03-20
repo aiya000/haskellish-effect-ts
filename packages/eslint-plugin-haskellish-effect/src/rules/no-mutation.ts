@@ -1,7 +1,7 @@
 import { createRule } from '../utils/create-rule.js'
 
 type Options = []
-type MessageIds = 'noLet' | 'noAssignment' | 'noUpdateExpression'
+type MessageIds = 'noMutableDeclaration' | 'noAssignment' | 'noUpdateExpression'
 
 export const noMutation = createRule<Options, MessageIds>({
   name: 'no-mutation',
@@ -12,8 +12,8 @@ export const noMutation = createRule<Options, MessageIds>({
         'Disallow mutable bindings and reassignment. Use Ref for managed state instead.',
     },
     messages: {
-      noLet:
-        '`let` declarations are not allowed. Use `const` for bindings and Ref for mutable state.',
+      noMutableDeclaration:
+        '`let`/`var` declarations are not allowed. Use `const` for bindings and Ref for mutable state.',
       noAssignment:
         'Assignment expressions are not allowed. Use Ref for managed state instead.',
       noUpdateExpression:
@@ -26,7 +26,7 @@ export const noMutation = createRule<Options, MessageIds>({
     return {
       VariableDeclaration(node) {
         if (node.kind === 'let' || node.kind === 'var') {
-          context.report({ node, messageId: 'noLet' })
+          context.report({ node, messageId: 'noMutableDeclaration' })
         }
       },
       AssignmentExpression(node) {
