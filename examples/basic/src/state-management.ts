@@ -7,7 +7,6 @@
  */
 import {
   Effect,
-  pipe,
   newIORef,
   readIORef,
   writeIORef,
@@ -63,14 +62,13 @@ export const accumulatorExample: Effect.Effect<
   readonly [ReadonlyArray<string>, number]
 > = runState(0, (ref) =>
   Effect.gen(function* () {
-    const results: ReadonlyArray<string> = []
     yield* modifyState(ref, (s) => s + 1)
     const first = yield* getState(ref)
     yield* modifyState(ref, (s) => s + 1)
     const second = yield* getState(ref)
     yield* putState(ref, 100)
     const third = yield* getState(ref)
-    return [...results, `step1=${first}`, `step2=${second}`, `step3=${third}`]
+    return [`step1=${first}`, `step2=${second}`, `step3=${third}`]
   }),
 )
 
@@ -87,6 +85,6 @@ export const stateManagementProgram = Effect.gen(function* () {
   yield* consoleLog(`State result: ${result}, final state: ${finalState}`)
 
   const [steps, total] = yield* accumulatorExample
-  yield* consoleLog(`Accumulator steps: ${pipe(steps).join(', ')}`)
+  yield* consoleLog(`Accumulator steps: ${steps.join(', ')}`)
   yield* consoleLog(`Accumulator total: ${total}`)
 })
