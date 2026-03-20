@@ -161,7 +161,7 @@ async function getUser(id: number): Promise<User> {
 }
 
 // After
-import { Effect, tryFetch, jsonParse, Schema } from 'haskellish-effect'
+import { Effect, pipe, tryFetch, jsonParse, Schema } from 'haskellish-effect'
 
 const getUser = (id: number) =>
   pipe(

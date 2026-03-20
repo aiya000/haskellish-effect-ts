@@ -7,11 +7,11 @@ If you're coming from ordinary TypeScript, here's the progression:
 ### Step 1: Understand `pipe`
 ```typescript
 // Instead of method chaining:
-const result = arr.filter((x) => x > 0).map((x) => x * 2)
+const result1 = arr.filter((x) => x > 0).map((x) => x * 2)
 
 // Use pipe for function composition:
 import { pipe, Array } from 'haskellish-effect'
-const result = pipe(arr, Array.filter((x) => x > 0), Array.map((x) => x * 2))
+const result2 = pipe(arr, Array.filter((x) => x > 0), Array.map((x) => x * 2))
 ```
 
 `pipe` takes a value and passes it through a sequence of functions. It's the backbone of functional composition.
