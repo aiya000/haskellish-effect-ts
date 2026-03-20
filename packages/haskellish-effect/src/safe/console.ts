@@ -30,7 +30,11 @@ export const consoleTrace = (
 
 export const consoleDir = (
   item: unknown,
-  options?: object,
+  options?: {
+    readonly depth?: number
+    readonly colors?: boolean
+    readonly showHidden?: boolean
+  },
 ): Effect.Effect<void> => Effect.sync(() => console.dir(item, options))
 
 export const consoleTable = (
