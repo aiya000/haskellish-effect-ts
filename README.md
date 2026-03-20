@@ -33,9 +33,12 @@ This project makes the invisible visible: **if a function has side effects, the 
 # Install
 bun add haskellish-effect
 bun add -d haskellish-effect-config eslint-plugin-haskellish-effect eslint typescript typescript-eslint
+```
 
-# eslint.config.js
-import { recommended } from "haskellish-effect-config";
+```js
+// eslint.config.js
+import { recommended } from 'haskellish-effect-config'
+
 export default [
   ...recommended,
   {
@@ -43,15 +46,15 @@ export default [
       parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
     },
   },
-];
+]
 ```
 
 Then write code:
 
 ```typescript
-import { Effect, pipe, tryFetch, jsonParse, Schema } from "haskellish-effect";
+import { Effect, pipe, tryFetch, jsonParse, Schema } from 'haskellish-effect'
 
-const User = Schema.Struct({ id: Schema.Number, name: Schema.String });
+const User = Schema.Struct({ id: Schema.Number, name: Schema.String })
 
 // Side effects are explicit in the return type
 const getUser = (id: number) =>
@@ -59,11 +62,11 @@ const getUser = (id: number) =>
     tryFetch(`/api/users/${id}`),
     Effect.flatMap((r) => Effect.tryPromise({ try: () => r.text(), catch: (e) => e })),
     Effect.flatMap(jsonParse),
-    Effect.flatMap(Schema.decodeUnknown(User))
-  );
+    Effect.flatMap(Schema.decodeUnknown(User)),
+  )
 
 // Pure function — no Effect, no side effects
-const greet = (name: string): string => `Hello, ${name}!`;
+const greet = (name: string): string => `Hello, ${name}!`
 ```
 
 ## ESLint Rules

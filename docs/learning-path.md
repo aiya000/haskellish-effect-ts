@@ -7,78 +7,80 @@ If you're coming from ordinary TypeScript, here's the progression:
 ### Step 1: Understand `pipe`
 ```typescript
 // Instead of method chaining:
-const result = arr.filter(x => x > 0).map(x => x * 2);
+const result = arr.filter((x) => x > 0).map((x) => x * 2)
 
 // Use pipe for function composition:
-import { pipe, Array } from "haskellish-effect";
-const result = pipe(arr, Array.filter(x => x > 0), Array.map(x => x * 2));
+import { pipe, Array } from 'haskellish-effect'
+const result = pipe(arr, Array.filter((x) => x > 0), Array.map((x) => x * 2))
 ```
 
 `pipe` takes a value and passes it through a sequence of functions. It's the backbone of functional composition.
 
 ### Step 2: Understand `Option` (replacing null/undefined)
 ```typescript
-import { Option, pipe } from "haskellish-effect";
+import { Option, pipe } from 'haskellish-effect'
 
 // Instead of: const head = arr[0]; // might be undefined!
-const head = pipe(arr, Array.head); // Option<number>
+const head = pipe(arr, Array.head) // Option<number>
 
 // Transform only if present
-const doubled = pipe(head, Option.map(x => x * 2));
+const doubled = pipe(head, Option.map((x) => x * 2))
 
 // Extract with a default
-const value = pipe(doubled, Option.getOrElse(() => 0));
+const value = pipe(doubled, Option.getOrElse(() => 0))
 ```
 
 ### Step 3: Understand `Either` (replacing throw/catch)
 ```typescript
-import { Either } from "haskellish-effect";
+import { Either } from 'haskellish-effect'
 
 // Instead of: if (bad) throw new Error("bad");
 const validate = (x: string): Either.Either<string, ValidationError> =>
-  x.length > 0 ? Either.right(x) : Either.left({ _tag: "Empty" });
+  x.length > 0 ? Either.right(x) : Either.left({ _tag: 'Empty' })
 ```
 
 ### Step 4: Understand `Effect` (replacing async/await)
 ```typescript
-import { Effect, pipe, tryFetch } from "haskellish-effect";
+import { Effect, pipe, tryFetch } from 'haskellish-effect'
 
 // Instead of: const response = await fetch(url);
 // Use:
 const program = pipe(
   tryFetch(url),
-  Effect.flatMap(response => Effect.tryPromise({
-    try: () => response.json(),
-    catch: (e) => e,
-  }))
-);
+  Effect.flatMap((response) =>
+    Effect.tryPromise({
+      try: () => response.json(),
+      catch: (e) => e,
+    }),
+  ),
+)
 
 // Nothing happens until:
-Effect.runPromise(program);
+Effect.runPromise(program)
 ```
 
 ### Step 5: Understand Services (dependency injection)
 ```typescript
-import { Effect, Context, Layer } from "haskellish-effect";
+import { Effect, Context, Layer } from 'haskellish-effect'
 
 // Define what the service does (like an interface)
-class Logger extends Context.Tag("Logger")<Logger, {
-  readonly log: (msg: string) => Effect.Effect<void>;
+class Logger extends Context.Tag('Logger')<Logger, {
+  readonly log: (msg: string) => Effect.Effect<void>
 }>() {}
 
 // Define how it works (the implementation)
 const LoggerLive = Layer.succeed(Logger, {
   log: (msg) => Effect.sync(() => { /* ... */ }),
-});
+})
 
 // Use the service (without knowing the implementation)
 const program = Effect.gen(function* () {
-  const logger = yield* Logger;
-  yield* logger.log("Hello!");
-});
+  const logger = yield* Logger
+  yield* logger.log('Hello!')
+})
 
 // Provide the implementation at the edge
-Effect.runPromise(program.pipe(Effect.provide(LoggerLive)));
+Effect.runPromise(program.pipe(Effect.provide(LoggerLive)))
 ```
 
 ---
