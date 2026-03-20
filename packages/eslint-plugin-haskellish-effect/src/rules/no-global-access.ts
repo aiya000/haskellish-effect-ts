@@ -1,44 +1,44 @@
-import type { Scope } from "@typescript-eslint/utils/ts-eslint"
-import { createRule } from "../utils/create-rule.js"
+import type { Scope } from '@typescript-eslint/utils/ts-eslint'
+import { createRule } from '../utils/create-rule.js'
 
 const DEFAULT_BLOCKED_GLOBALS = [
-  "fetch",
-  "console",
-  "Math",
-  "JSON",
-  "setTimeout",
-  "setInterval",
-  "clearTimeout",
-  "clearInterval",
-  "Date",
-  "Promise",
-  "crypto",
-  "URL",
-  "Headers",
-  "Request",
-  "Response",
-  "AbortController",
-  "FormData",
-  "Blob",
-  "performance",
-  "navigator",
-  "localStorage",
-  "sessionStorage",
-  "alert",
-  "confirm",
-  "prompt",
-  "XMLHttpRequest",
-  "WebSocket",
-  "EventSource",
-  "atob",
-  "btoa",
-  "queueMicrotask",
-  "requestAnimationFrame",
-  "cancelAnimationFrame",
+  'fetch',
+  'console',
+  'Math',
+  'JSON',
+  'setTimeout',
+  'setInterval',
+  'clearTimeout',
+  'clearInterval',
+  'Date',
+  'Promise',
+  'crypto',
+  'URL',
+  'Headers',
+  'Request',
+  'Response',
+  'AbortController',
+  'FormData',
+  'Blob',
+  'performance',
+  'navigator',
+  'localStorage',
+  'sessionStorage',
+  'alert',
+  'confirm',
+  'prompt',
+  'XMLHttpRequest',
+  'WebSocket',
+  'EventSource',
+  'atob',
+  'btoa',
+  'queueMicrotask',
+  'requestAnimationFrame',
+  'cancelAnimationFrame',
 ]
 
 type Options = [{ blocked?: string[]; additionalBlocked?: string[] }]
-type MessageIds = "blockedGlobal"
+type MessageIds = 'blockedGlobal'
 
 function collectGlobalReferences(scope: Scope.Scope, blockedSet: Set<string>) {
   const results: Scope.Reference[] = []
@@ -71,11 +71,11 @@ function collectGlobalReferences(scope: Scope.Scope, blockedSet: Set<string>) {
 }
 
 export const noGlobalAccess = createRule<Options, MessageIds>({
-  name: "no-global-access",
+  name: 'no-global-access',
   meta: {
-    type: "problem",
+    type: 'problem',
     docs: {
-      description: "Disallow direct access to effectful global APIs",
+      description: 'Disallow direct access to effectful global APIs',
     },
     messages: {
       blockedGlobal:
@@ -83,15 +83,15 @@ export const noGlobalAccess = createRule<Options, MessageIds>({
     },
     schema: [
       {
-        type: "object",
+        type: 'object',
         properties: {
           blocked: {
-            type: "array",
-            items: { type: "string" },
+            type: 'array',
+            items: { type: 'string' },
           },
           additionalBlocked: {
-            type: "array",
-            items: { type: "string" },
+            type: 'array',
+            items: { type: 'string' },
           },
         },
         additionalProperties: false,
@@ -114,14 +114,14 @@ export const noGlobalAccess = createRule<Options, MessageIds>({
     }
 
     return {
-      "Program:exit"(node) {
+      'Program:exit'(node) {
         const scope = context.sourceCode.getScope(node)
         const refs = collectGlobalReferences(scope, blockedSet)
 
         for (const ref of refs) {
           context.report({
             node: ref.identifier,
-            messageId: "blockedGlobal",
+            messageId: 'blockedGlobal',
             data: { name: ref.identifier.name },
           })
         }

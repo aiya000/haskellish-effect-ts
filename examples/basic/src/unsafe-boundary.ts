@@ -3,8 +3,8 @@
  * Like Haskell's System.IO.Unsafe, importing from haskellish-effect/unsafe
  * is a clear signal that this module performs side effects.
  */
-import { Effect } from "haskellish-effect"
-import { unsafeConsole, unsafeDate } from "haskellish-effect/unsafe"
+import { Effect } from 'haskellish-effect'
+import { unsafeConsole, unsafeDate } from 'haskellish-effect/unsafe'
 
 // This function explicitly uses unsafe bindings — the import makes it obvious
 export const logWithTimestamp = (message: string): Effect.Effect<void> =>

@@ -19,7 +19,7 @@ async function fetchUser_before(id: number): Promise<any> {
 
 // Side effect: console output, hidden in a "pure-looking" function
 function processUser_before(user: any): string {
-  console.log("Processing user:", user.name) // hidden side effect!
+  console.log('Processing user:', user.name) // hidden side effect!
   return user.name.toUpperCase()
 }
 
@@ -39,8 +39,8 @@ import {
   tryFetch,
   jsonParse,
   safeDate,
-} from "haskellish-effect"
-import { unsafeConsole } from "haskellish-effect/unsafe"
+} from 'haskellish-effect'
+import { unsafeConsole } from 'haskellish-effect/unsafe'
 
 const UserSchema = Schema.Struct({
   name: Schema.String,
@@ -68,7 +68,7 @@ const processUser_after = (
   user: typeof UserSchema.Type,
 ): Effect.Effect<string> =>
   Effect.sync(() => {
-    unsafeConsole.log("Processing user:", user.name) // side effect is visible in imports
+    unsafeConsole.log('Processing user:', user.name) // side effect is visible in imports
     return user.name.toUpperCase()
   })
 

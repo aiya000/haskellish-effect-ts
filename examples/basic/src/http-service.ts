@@ -10,7 +10,7 @@ import {
   pipe,
   tryFetch,
   jsonParse,
-} from "haskellish-effect"
+} from 'haskellish-effect'
 
 // --- Domain types ---
 
@@ -24,7 +24,7 @@ type User = typeof User.Type
 
 // --- Service definition (like a Haskell typeclass) ---
 
-export class UserService extends Context.Tag("UserService")<
+export class UserService extends Context.Tag('UserService')<
   UserService,
   {
     readonly getUser: (id: number) => Effect.Effect<User, unknown>
@@ -49,7 +49,7 @@ export const UserServiceLive = Layer.succeed(UserService, {
     ),
   listUsers: () =>
     pipe(
-      tryFetch("https://jsonplaceholder.typicode.com/users"),
+      tryFetch('https://jsonplaceholder.typicode.com/users'),
       Effect.flatMap((response) =>
         Effect.tryPromise({
           try: () => response.text(),

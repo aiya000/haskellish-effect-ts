@@ -1,5 +1,5 @@
 // Core
-export { Effect, Exit, Cause, pipe, flow } from "effect"
+export { Effect, Exit, Cause, pipe, flow } from 'effect'
 
 // Data
 export {
@@ -13,31 +13,31 @@ export {
   Equal,
   Hash,
   Equivalence,
-} from "effect"
+} from 'effect'
 
 // Collections
-export { Chunk, HashMap, HashSet, List, SortedMap, SortedSet } from "effect"
+export { Chunk, HashMap, HashSet, List, SortedMap, SortedSet } from 'effect'
 
 // Concurrency
-export { Fiber, Queue, Ref, Deferred, PubSub, Scope, Supervisor } from "effect"
+export { Fiber, Queue, Ref, Deferred, PubSub, Scope, Supervisor } from 'effect'
 
 // Streaming
-export { Stream, Sink, Channel } from "effect"
+export { Stream, Sink, Channel } from 'effect'
 
 // Dependency Injection
-export { Context, Layer } from "effect"
+export { Context, Layer } from 'effect'
 
 // Time
-export { Schedule, Duration } from "effect"
+export { Schedule, Duration } from 'effect'
 
 // Observability
-export { Logger, LogLevel, Metric, Tracer } from "effect"
+export { Logger, LogLevel, Metric, Tracer } from 'effect'
 
 // Schema & Config
-export { Schema, Config, ConfigProvider } from "effect"
+export { Schema, Config, ConfigProvider } from 'effect'
 
 // Collections — Array re-exported as-is (users can alias if needed)
-export { Array } from "effect"
+export { Array } from 'effect'
 
 // Safe wrappers
 export {
@@ -71,4 +71,4 @@ export {
   consoleCountReset,
   consoleClear,
   consoleAssert,
-} from "./safe/index.js"
+} from './safe/index.js'

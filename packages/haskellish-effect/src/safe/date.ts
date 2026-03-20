@@ -1,4 +1,4 @@
-import { Effect } from "effect"
+import { Effect } from 'effect'
 
 export const safeNow: Effect.Effect<number> = Effect.sync(() => Date.now())
 

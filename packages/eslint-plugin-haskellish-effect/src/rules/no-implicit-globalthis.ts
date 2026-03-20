@@ -1,10 +1,10 @@
-import type { Scope } from "@typescript-eslint/utils/ts-eslint"
-import { createRule } from "../utils/create-rule.js"
+import type { Scope } from '@typescript-eslint/utils/ts-eslint'
+import { createRule } from '../utils/create-rule.js'
 
-const BLOCKED_GLOBALS = new Set(["globalThis", "window", "document", "self"])
+const BLOCKED_GLOBALS = new Set(['globalThis', 'window', 'document', 'self'])
 
 type Options = []
-type MessageIds = "blockedGlobalThis"
+type MessageIds = 'blockedGlobalThis'
 
 function collectBlockedReferences(scope: Scope.Scope) {
   const results: Scope.Reference[] = []
@@ -37,12 +37,12 @@ function collectBlockedReferences(scope: Scope.Scope) {
 }
 
 export const noImplicitGlobalThis = createRule<Options, MessageIds>({
-  name: "no-implicit-globalthis",
+  name: 'no-implicit-globalthis',
   meta: {
-    type: "problem",
+    type: 'problem',
     docs: {
       description:
-        "Disallow direct access to globalThis, window, document, and self",
+        'Disallow direct access to globalThis, window, document, and self',
     },
     messages: {
       blockedGlobalThis:
@@ -53,14 +53,14 @@ export const noImplicitGlobalThis = createRule<Options, MessageIds>({
   defaultOptions: [],
   create(context) {
     return {
-      "Program:exit"(node) {
+      'Program:exit'(node) {
         const scope = context.sourceCode.getScope(node)
         const refs = collectBlockedReferences(scope)
 
         for (const ref of refs) {
           context.report({
             node: ref.identifier,
-            messageId: "blockedGlobalThis",
+            messageId: 'blockedGlobalThis',
             data: { name: ref.identifier.name },
           })
         }

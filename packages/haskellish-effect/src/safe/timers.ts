@@ -1,4 +1,4 @@
-import { Effect } from "effect"
+import { Effect } from 'effect'
 
 export const safeSetTimeout = (delay: number): Effect.Effect<void> =>
   Effect.async<void>((resume) => {
