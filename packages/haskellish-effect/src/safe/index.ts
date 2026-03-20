@@ -8,8 +8,6 @@ export {
 export { safeSetTimeout, safeSetInterval } from './timers.js'
 export { safeRandom } from './random.js'
 export { safeNow, safeDate } from './date.js'
-export { newIORef, readIORef, writeIORef, modifyIORef } from './ioref.js'
-export { runState, getState, putState, modifyState } from './state.js'
 export {
   consoleLog,
   consoleWarn,

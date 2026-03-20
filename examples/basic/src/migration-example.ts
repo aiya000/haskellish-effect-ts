@@ -36,12 +36,10 @@ import {
   Effect,
   Schema,
   pipe,
+  Ref,
   tryFetch,
   jsonParse,
   safeDate,
-  newIORef,
-  readIORef,
-  modifyIORef,
 } from 'haskellish-effect'
 import { unsafeConsole } from 'haskellish-effect/unsafe'
 
@@ -102,16 +100,16 @@ function sumArray_before(arr: number[]): number {
 }
 
 // ============================================================
-// AFTER: Managed state via IORef (no-mutation compliant)
+// AFTER: Managed state via Ref (no-mutation compliant)
 // ============================================================
 
 const sumArray_after = (arr: ReadonlyArray<number>): Effect.Effect<number> =>
   Effect.gen(function* () {
-    const total = yield* newIORef(0)
+    const total = yield* Ref.make(0)
     for (const n of arr) {
-      yield* modifyIORef(total, (t) => t + n)
+      yield* Ref.update(total, (t) => t + n)
     }
-    return yield* readIORef(total)
+    return yield* Ref.get(total)
   })
 
 void sumArray_before

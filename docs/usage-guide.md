@@ -212,9 +212,9 @@ const data = jsonParse(raw) // Effect<unknown, JsonParseError>
 const log = consoleLog('hello') // Effect<void>
 ```
 
-### Step 4.5: Replace mutable state with IORef/State
+### Step 4.5: Replace mutable state with Effect's `Ref`
 
-The `no-mutation` rule bans `let`/`var` and reassignment. Use `IORef` or `State` for managed mutable state:
+The `no-mutation` rule bans `let`/`var` and reassignment. Use Effect's `Ref` for managed mutable state:
 
 ```typescript
 // Before
@@ -223,28 +223,14 @@ count++
 count += 5
 
 // After
-import { Effect, newIORef, readIORef, modifyIORef } from 'haskellish-effect'
+import { Effect, Ref } from 'haskellish-effect'
 
 const program = Effect.gen(function* () {
-  const count = yield* newIORef(0)
-  yield* modifyIORef(count, (n) => n + 1)
-  yield* modifyIORef(count, (n) => n + 5)
-  return yield* readIORef(count) // 6
+  const count = yield* Ref.make(0)
+  yield* Ref.update(count, (n) => n + 1)
+  yield* Ref.update(count, (n) => n + 5)
+  return yield* Ref.get(count) // 6
 })
-```
-
-For computations that thread state through a series of steps, use `runState`:
-
-```typescript
-import { Effect, runState, modifyState, getState } from 'haskellish-effect'
-
-const result = runState(0, (ref) =>
-  Effect.gen(function* () {
-    yield* modifyState(ref, (s) => s + 1)
-    yield* modifyState(ref, (s) => s * 10)
-    return yield* getState(ref)
-  }),
-) // Effect producing [10, 10]
 ```
 
 ### Step 5: Escalate to `error` level

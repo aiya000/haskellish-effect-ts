@@ -78,8 +78,8 @@ Each capability (network, console, time, randomness) must be explicitly acquired
 | Time                 | `safeNow`, `safeDate` from `haskellish-effect`                                | `UnsafeDate` from `haskellish-effect/unsafe`        |
 | Randomness           | `safeRandom` from `haskellish-effect`                                         | `unsafeMath` from `haskellish-effect/unsafe`        |
 | Timers               | `safeSetTimeout`, `safeSetInterval` from `haskellish-effect`                  | `unsafeSetTimeout` from `haskellish-effect/unsafe`  |
-| Mutable State        | `newIORef`, `readIORef`, `writeIORef`, `modifyIORef` from `haskellish-effect` | `let`/`var` declarations (blocked by `no-mutation`) |
-| Stateful Computation | `runState`, `getState`, `putState`, `modifyState` from `haskellish-effect`    | Reassignment (blocked by `no-mutation`)             |
+| Mutable State        | `Ref` from `haskellish-effect` (wraps Effect's `Ref`)                         | `let`/`var` declarations (blocked by `no-mutation`) |
+| Stateful Computation | `Ref` from `haskellish-effect` (wraps Effect's `Ref`)                         | Reassignment (blocked by `no-mutation`)             |
 
 Safe wrappers return `Effect` values — the side effect is tracked in the type system.
 Unsafe bindings give you raw access — but the import path makes this visible.
@@ -101,48 +101,19 @@ Rules of thumb:
 2. **Use unsafe bindings at the boundary** — logging, debugging, FFI
 3. **Never hide unsafe in a "pure-looking" module** — the import should be in the file that uses it
 
-## State Management (IORef & State)
+## State Management (with `no-mutation` enabled)
 
-When the `no-mutation` rule is enabled, `let`/`var` declarations and reassignment are banned. Instead, use `IORef` or `State` from `haskellish-effect` for managed mutable state — equivalent to Haskell's `IORef` and `State` monad:
-
-### IORef — A Mutable Reference in Effect
+When the `no-mutation` rule is enabled, `let`/`var` declarations and reassignment are banned. Instead, use Effect's `Ref` (re-exported from `haskellish-effect`) for managed mutable state — equivalent to Haskell's `IORef`:
 
 ```typescript
-import {
-  Effect,
-  newIORef,
-  readIORef,
-  writeIORef,
-  modifyIORef,
-} from 'haskellish-effect'
+import { Effect, Ref } from 'haskellish-effect'
 
 const program = Effect.gen(function* () {
-  const counter = yield* newIORef(0) // create a new ref
-  yield* modifyIORef(counter, (n) => n + 1) // update with a pure function
-  yield* writeIORef(counter, 42) // overwrite with a value
-  return yield* readIORef(counter) // read the current value → 42
+  const counter = yield* Ref.make(0) // create a new ref
+  yield* Ref.update(counter, (n) => n + 1) // update with a pure function
+  yield* Ref.set(counter, 42) // overwrite with a value
+  return yield* Ref.get(counter) // read the current value → 42
 })
 ```
 
-### State — Stateful Computations
-
-```typescript
-import {
-  Effect,
-  runState,
-  getState,
-  putState,
-  modifyState,
-} from 'haskellish-effect'
-
-// runState returns [result, finalState]
-const computation = runState(0, (ref) =>
-  Effect.gen(function* () {
-    yield* modifyState(ref, (s) => s + 10)
-    yield* putState(ref, 42)
-    return yield* getState(ref)
-  }),
-) // Effect producing [42, 42]
-```
-
-Both APIs keep mutable state inside `Effect`, making it explicit and composable without needing `let` or reassignment.
+`Ref` keeps mutable state inside `Effect`, making it explicit and composable without needing `let` or reassignment.

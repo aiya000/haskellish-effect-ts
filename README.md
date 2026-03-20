@@ -76,34 +76,17 @@ const greet = (name: string): string => `Hello, ${name}!`
 
 ### Managed State (with `no-mutation` enabled)
 
-When the `no-mutation` rule is active, `let` and reassignment are banned. Use `IORef` or `State` for mutable state:
+When the `no-mutation` rule is active, `let` and reassignment are banned. Use Effect's `Ref` for managed mutable state:
 
 ```typescript
-import {
-  Effect,
-  newIORef,
-  readIORef,
-  modifyIORef,
-  runState,
-  modifyState,
-  getState,
-} from 'haskellish-effect'
+import { Effect, Ref } from 'haskellish-effect'
 
-// IORef: a mutable reference managed within Effect
 const counter = Effect.gen(function* () {
-  const ref = yield* newIORef(0)
-  yield* modifyIORef(ref, (n) => n + 1)
-  yield* modifyIORef(ref, (n) => n + 1)
-  return yield* readIORef(ref) // 2
+  const ref = yield* Ref.make(0)
+  yield* Ref.update(ref, (n) => n + 1)
+  yield* Ref.update(ref, (n) => n + 1)
+  return yield* Ref.get(ref) // 2
 })
-
-// State: run a stateful computation and get the result and final state
-const stateful = runState(0, (ref) =>
-  Effect.gen(function* () {
-    yield* modifyState(ref, (s) => s + 10)
-    return yield* getState(ref)
-  }),
-) // Effect producing [10, 10]
 ```
 
 ## ESLint Rules
@@ -116,7 +99,7 @@ const stateful = runState(0, (ref) =>
 | `capability-enforcement` | Central closed-world rule — all bindings must be traceable          |
 | `no-promise`             | Blocks `async/await` and `new Promise()` — use Effect               |
 | `no-explicit-any`        | Blocks `any` type annotations                                       |
-| `no-mutation`            | Blocks `let`/`var`, reassignment, `++`/`--` — use `const` and `Ref` |
+| `no-mutation`            | Blocks `let`/`var`, reassignment, `++`/`--` — use `const` and Effect's `Ref` |
 | `effect-boundary`        | Exported functions should return Effect (strict mode)               |
 
 ## Documentation

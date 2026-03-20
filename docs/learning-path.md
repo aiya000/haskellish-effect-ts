@@ -129,8 +129,8 @@ If you know Haskell, here's the mapping:
 | Typeclass                    | `Context.Tag` + `Layer`                                                       |
 | Instance                     | `Layer.succeed` / `Layer.effect`                                              |
 | `System.IO.Unsafe`           | `haskellish-effect/unsafe`                                                    |
-| `IORef`                      | `newIORef`, `readIORef`, `writeIORef`, `modifyIORef` from `haskellish-effect` |
-| `State s a` / `StateT s m a` | `runState`, `getState`, `putState`, `modifyState` from `haskellish-effect`    |
+| `IORef`                      | `Ref` from `haskellish-effect` (wraps Effect's `Ref`)                         |
+| `State s a` / `StateT s m a` | `Ref` from `haskellish-effect` (wraps Effect's `Ref`)                        |
 | Module export list           | ESLint `only-allowed-imports` rule                                            |
 
 ### Key differences from Haskell:

@@ -21,7 +21,7 @@ Haskell的な規律をTypeScriptに持ち込むOSSライブラリスイートを
 5. **no-promise** — `async/await`と`new Promise()`を禁止（Effectを使う）
 6. **no-explicit-any** — `any`型注釈を禁止
 7. **effect-boundary** — エクスポートされた関数にEffect戻り値型を要求（strictモード）
-8. **no-mutation** — `let`/`var`宣言・再代入・`++`/`--`を禁止（Refで状態管理）
+8. **no-mutation** — `let`/`var`宣言・再代入・`++`/`--`を禁止（Effect's Refで状態管理）
 
 ## 主要な設計判断
 
