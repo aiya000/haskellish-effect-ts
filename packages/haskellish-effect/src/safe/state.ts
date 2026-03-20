@@ -4,10 +4,10 @@ import { Effect, Ref } from 'effect'
  * Run a stateful computation with an initial state, returning both the result and the final state.
  * Equivalent to Haskell's `runState`.
  */
-export const runState = <S, A>(
+export const runState = <S, A, E, R>(
   initial: S,
-  computation: (ref: Ref.Ref<S>) => Effect.Effect<A>,
-): Effect.Effect<readonly [A, S]> =>
+  computation: (ref: Ref.Ref<S>) => Effect.Effect<A, E, R>,
+): Effect.Effect<readonly [A, S], E, R> =>
   Effect.gen(function* () {
     const ref = yield* Ref.make(initial)
     const result = yield* computation(ref)
