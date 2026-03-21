@@ -1,7 +1,8 @@
-import { recommended } from 'haskellish-effect-config'
+import { recommended, effectsLayer } from 'haskellish-effect-config'
 
 export default [
   ...recommended,
+  effectsLayer,
   {
     languageOptions: {
       parserOptions: {

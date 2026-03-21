@@ -67,7 +67,30 @@ const strict = {
   },
 }
 
-Object.assign(plugin.configs, { recommended, strict })
+// Effects layer config — used in `effects/` directories where users wrap
+// external npm modules with Effect types.
+//
+// Within these directories:
+// - Imports from any npm module are allowed
+// - Direct global access is allowed
+// - But exported functions must return Effect types
+//
+// Default file patterns: **/effects/**/*.ts
+const effectsLayer = {
+  files: ['**/effects/**/*.ts'],
+  plugins: {
+    'haskellish-effect': plugin,
+  },
+  rules: {
+    'haskellish-effect/only-allowed-imports': 'off' as const,
+    'haskellish-effect/no-global-access': 'off' as const,
+    'haskellish-effect/no-implicit-globalthis': 'off' as const,
+    'haskellish-effect/capability-enforcement': 'off' as const,
+    'haskellish-effect/effect-boundary': 'error' as const,
+  },
+}
+
+Object.assign(plugin.configs, { recommended, strict, effectsLayer })
 
 export default plugin
-export { rules, recommended, strict }
+export { rules, recommended, strict, effectsLayer }
