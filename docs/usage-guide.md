@@ -52,8 +52,14 @@ export default [
 ```typescript
 import { pipe, Option, Array } from 'haskellish-effect'
 
-export const findUser = (users: ReadonlyArray<User>, id: number): Option.Option<User> =>
-  pipe(users, Array.findFirst((u) => u.id === id))
+export const findUser = (
+  users: ReadonlyArray<User>,
+  id: number,
+): Option.Option<User> =>
+  pipe(
+    users,
+    Array.findFirst((u) => u.id === id),
+  )
 ```
 
 ### Effectful Functions
@@ -78,9 +84,12 @@ export const loadConfig = Effect.gen(function* () {
 import { Effect, Context, Layer } from 'haskellish-effect'
 
 // 1. Define the service interface
-export class Database extends Context.Tag('Database')<Database, {
-  readonly query: (sql: string) => Effect.Effect<ReadonlyArray<unknown>>
-}>() {}
+export class Database extends Context.Tag('Database')<
+  Database,
+  {
+    readonly query: (sql: string) => Effect.Effect<ReadonlyArray<unknown>>
+  }
+>() {}
 
 // 2. Create an implementation
 export const DatabaseLive = Layer.succeed(Database, {
@@ -114,7 +123,12 @@ The import from `haskellish-effect/unsafe` makes the boundary visible to code re
 > **Tip:** For common console operations, prefer the safe wrappers instead of `unsafeConsole`:
 >
 > ```typescript
-> import { Effect, consoleLog, consoleWarn, consoleError } from 'haskellish-effect'
+> import {
+>   Effect,
+>   consoleLog,
+>   consoleWarn,
+>   consoleError,
+> } from 'haskellish-effect'
 >
 > export const program = Effect.gen(function* () {
 >   yield* consoleLog('Starting...')
@@ -133,12 +147,18 @@ export default [
   ...recommended,
   {
     rules: {
-      'haskellish-effect/only-allowed-imports': ['error', {
-        allowedPackages: ['zod', 'drizzle-orm', '@t3-oss/*'],
-      }],
-      'haskellish-effect/capability-enforcement': ['warn', {
-        allowedPackages: ['zod', 'drizzle-orm', '@t3-oss/*'],
-      }],
+      'haskellish-effect/only-allowed-imports': [
+        'error',
+        {
+          allowedPackages: ['zod', 'drizzle-orm', '@t3-oss/*'],
+        },
+      ],
+      'haskellish-effect/capability-enforcement': [
+        'warn',
+        {
+          allowedPackages: ['zod', 'drizzle-orm', '@t3-oss/*'],
+        },
+      ],
     },
   },
 ]
@@ -147,12 +167,15 @@ export default [
 ## Migration from Ordinary TypeScript
 
 ### Step 1: Install and configure
+
 Set up the packages and ESLint config as described above.
 
 ### Step 2: Start with `warn` level
+
 Use the `recommended` config (rules 4-6 are `warn`) to see violations without blocking development.
 
 ### Step 3: Replace `async/await` with Effect
+
 ```typescript
 // Before
 async function getUser(id: number): Promise<User> {
@@ -166,13 +189,16 @@ import { Effect, pipe, tryFetch, jsonParse, Schema } from 'haskellish-effect'
 const getUser = (id: number) =>
   pipe(
     tryFetch(`/api/users/${id}`),
-    Effect.flatMap((r) => Effect.tryPromise({ try: () => r.text(), catch: (e) => e })),
+    Effect.flatMap((r) =>
+      Effect.tryPromise({ try: () => r.text(), catch: (e) => e }),
+    ),
     Effect.flatMap(jsonParse),
     Effect.flatMap(Schema.decodeUnknown(UserSchema)),
   )
 ```
 
 ### Step 4: Replace global access with safe wrappers
+
 ```typescript
 // Before
 const now = Date.now()
@@ -181,12 +207,34 @@ console.log('hello')
 
 // After
 import { safeNow, jsonParse, consoleLog } from 'haskellish-effect'
-const now = safeNow              // Effect<number>
-const data = jsonParse(raw)       // Effect<unknown, JsonParseError>
-const log = consoleLog('hello')   // Effect<void>
+const now = safeNow // Effect<number>
+const data = jsonParse(raw) // Effect<unknown, JsonParseError>
+const log = consoleLog('hello') // Effect<void>
+```
+
+### Step 4.5: Replace mutable state with Effect's `Ref`
+
+The `no-mutation` rule bans `let`/`var` and reassignment. Use Effect's `Ref` for managed mutable state:
+
+```typescript
+// Before
+let count = 0
+count++
+count += 5
+
+// After
+import { Effect, Ref } from 'haskellish-effect'
+
+const program = Effect.gen(function* () {
+  const count = yield* Ref.make(0)
+  yield* Ref.update(count, (n) => n + 1)
+  yield* Ref.update(count, (n) => n + 5)
+  return yield* Ref.get(count) // 6
+})
 ```
 
 ### Step 5: Escalate to `error` level
+
 Once your codebase is clean, switch to the `strict` config.
 
 ## Project Structure

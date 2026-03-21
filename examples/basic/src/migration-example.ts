@@ -36,6 +36,7 @@ import {
   Effect,
   Schema,
   pipe,
+  Ref,
   tryFetch,
   jsonParse,
   safeDate,
@@ -85,3 +86,31 @@ void formatTimestamp_before
 void fetchUser_after
 void processUser_after
 void formatTimestamp_after
+
+// ============================================================
+// BEFORE: Mutable state (blocked by no-mutation rule)
+// ============================================================
+
+function sumArray_before(arr: number[]): number {
+  let total = 0
+  for (let i = 0; i < arr.length; i++) {
+    total += arr[i]!
+  }
+  return total
+}
+
+// ============================================================
+// AFTER: Managed state via Ref (no-mutation compliant)
+// ============================================================
+
+const sumArray_after = (arr: ReadonlyArray<number>): Effect.Effect<number> =>
+  Effect.gen(function* () {
+    const total = yield* Ref.make(0)
+    for (const n of arr) {
+      yield* Ref.update(total, (t) => t + n)
+    }
+    return yield* Ref.get(total)
+  })
+
+void sumArray_before
+void sumArray_after

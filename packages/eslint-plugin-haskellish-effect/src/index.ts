@@ -6,6 +6,7 @@ import { noPromise } from './rules/no-promise.js'
 import { noExplicitAny } from './rules/no-explicit-any.js'
 import { effectBoundary } from './rules/effect-boundary.js'
 import { noThrow } from './rules/no-throw.js'
+import { noMutation } from './rules/no-mutation.js'
 
 const rules = {
   'only-allowed-imports': onlyAllowedImports,
@@ -16,6 +17,7 @@ const rules = {
   'no-explicit-any': noExplicitAny,
   'effect-boundary': effectBoundary,
   'no-throw': noThrow,
+  'no-mutation': noMutation,
 }
 
 const plugin: {
@@ -44,6 +46,7 @@ const recommended = {
     'haskellish-effect/no-promise': 'warn' as const,
     'haskellish-effect/no-explicit-any': 'warn' as const,
     'haskellish-effect/no-throw': 'warn' as const,
+    'haskellish-effect/no-mutation': 'warn' as const,
   },
 }
 
@@ -60,6 +63,7 @@ const strict = {
     'haskellish-effect/no-explicit-any': 'error' as const,
     'haskellish-effect/effect-boundary': 'error' as const,
     'haskellish-effect/no-throw': 'error' as const,
+    'haskellish-effect/no-mutation': 'error' as const,
   },
 }
 
