@@ -134,6 +134,28 @@ export default [
 
 By default, the effects layer applies to all `**/effects/**/*.ts` files.
 
+### Custom Directory Name
+
+If you prefer a directory name other than `effects/`, use `createEffectsLayer` to target your own file patterns:
+
+```js
+// eslint.config.js
+import { recommended, createEffectsLayer } from 'haskellish-effect-config'
+
+export default [
+  ...recommended,
+  createEffectsLayer(['**/wrappers/**/*.ts']),
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+]
+```
+
 ### Example
 
 ```typescript

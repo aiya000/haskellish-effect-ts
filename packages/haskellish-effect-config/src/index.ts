@@ -3,6 +3,7 @@ import haskellishPlugin, {
   recommended as haskellishRecommended,
   strict as haskellishStrict,
   effectsLayer as haskellishEffectsLayer,
+  createEffectsLayer as haskellishCreateEffectsLayer,
 } from 'eslint-plugin-haskellish-effect'
 
 export const recommended: ReadonlyArray<unknown> = [
@@ -53,5 +54,10 @@ export const strict: ReadonlyArray<unknown> = [
  * ```
  */
 export const effectsLayer: unknown = haskellishEffectsLayer
+
+// Create a custom effects layer config with your own file patterns.
+// Use this if you prefer a directory name other than `effects/`.
+export const createEffectsLayer: (files: readonly string[]) => unknown =
+  haskellishCreateEffectsLayer
 
 export { haskellishPlugin }
