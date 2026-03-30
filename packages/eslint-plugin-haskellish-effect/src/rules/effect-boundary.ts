@@ -4,6 +4,11 @@ import { createRule } from '../utils/create-rule.js'
 type Options = []
 type MessageIds = 'missingEffectReturn'
 
+type FunctionLikeNode =
+  | TSESTree.FunctionDeclaration
+  | TSESTree.ArrowFunctionExpression
+  | TSESTree.FunctionExpression
+
 function hasEffectReturnType(
   returnType: TSESTree.TSTypeAnnotation | undefined,
 ): boolean {
@@ -34,13 +39,7 @@ function hasEffectReturnType(
   return false
 }
 
-function getFunctionNode(
-  node: TSESTree.Node,
-):
-  | TSESTree.FunctionDeclaration
-  | TSESTree.ArrowFunctionExpression
-  | TSESTree.FunctionExpression
-  | null {
+function getFunctionNode(node: TSESTree.Node): FunctionLikeNode | null {
   if (
     node.type === 'FunctionDeclaration' ||
     node.type === 'ArrowFunctionExpression' ||
@@ -71,21 +70,10 @@ export const effectBoundary = createRule<Options, MessageIds>({
     // check them when they appear in `export { name }` or `export default name`.
     const scopeBindings = new Map<
       string,
-      {
-        functionNode:
-          | TSESTree.FunctionDeclaration
-          | TSESTree.ArrowFunctionExpression
-          | TSESTree.FunctionExpression
-      }
+      { functionNode: FunctionLikeNode }
     >()
 
-    function checkFunction(
-      node:
-        | TSESTree.FunctionDeclaration
-        | TSESTree.ArrowFunctionExpression
-        | TSESTree.FunctionExpression,
-      name: string,
-    ) {
+    function checkFunction(node: FunctionLikeNode, name: string) {
       if (!hasEffectReturnType(node.returnType)) {
         context.report({
           node,
@@ -142,10 +130,7 @@ export const effectBoundary = createRule<Options, MessageIds>({
       'ExportNamedDeclaration > ExportSpecifier'(
         node: TSESTree.ExportSpecifier,
       ) {
-        const localName =
-          node.local.type === 'Identifier' ? node.local.name : undefined
-        if (!localName) return
-
+        const localName = node.local.name
         const binding = scopeBindings.get(localName)
         if (binding) {
           const exportedName =
