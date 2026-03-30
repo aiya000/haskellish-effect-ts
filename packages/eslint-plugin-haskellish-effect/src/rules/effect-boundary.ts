@@ -68,10 +68,7 @@ export const effectBoundary = createRule<Options, MessageIds>({
   create(context) {
     // Track function declarations/expressions at module scope so we can
     // check them when they appear in `export { name }` or `export default name`.
-    const scopeBindings = new Map<
-      string,
-      { functionNode: FunctionLikeNode }
-    >()
+    const scopeBindings = new Map<string, { functionNode: FunctionLikeNode }>()
 
     function checkFunction(node: FunctionLikeNode, name: string) {
       if (!hasEffectReturnType(node.returnType)) {
@@ -130,13 +127,12 @@ export const effectBoundary = createRule<Options, MessageIds>({
       'ExportNamedDeclaration > ExportSpecifier'(
         node: TSESTree.ExportSpecifier,
       ) {
-        const localName = node.local.name
+        const localName =
+          node.local.type === 'Identifier' ? node.local.name : node.local.value
         const binding = scopeBindings.get(localName)
         if (binding) {
           const exportedName =
-            node.exported.type === 'Identifier'
-              ? node.exported.name
-              : localName
+            node.exported.type === 'Identifier' ? node.exported.name : localName
           checkFunction(binding.functionNode, exportedName)
         }
       },
@@ -150,9 +146,7 @@ export const effectBoundary = createRule<Options, MessageIds>({
         const fn = getFunctionNode(decl)
         if (fn) {
           const name =
-            fn.type === 'FunctionDeclaration' && fn.id
-              ? fn.id.name
-              : 'default'
+            fn.type === 'FunctionDeclaration' && fn.id ? fn.id.name : 'default'
           checkFunction(fn, name)
           return
         }
