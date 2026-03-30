@@ -14,12 +14,16 @@ import { Effect } from 'haskellish-effect'
 // For this example, we define a minimal stand-in.
 const axios = {
   get: (url: string) =>
-    fetch(url).then((r) => r.json() as Promise<{ data: unknown }>),
+    fetch(url)
+      .then((r) => r.json())
+      .then((data: unknown) => ({ data })),
   post: (url: string, data: unknown) =>
     fetch(url, {
       method: 'POST',
       body: JSON.stringify(data),
-    }).then((r) => r.json() as Promise<{ data: unknown }>),
+    })
+      .then((r) => r.json())
+      .then((data: unknown) => ({ data })),
 }
 
 /**
