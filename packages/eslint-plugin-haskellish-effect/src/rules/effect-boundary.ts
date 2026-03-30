@@ -132,7 +132,9 @@ export const effectBoundary = createRule<Options, MessageIds>({
         const binding = scopeBindings.get(localName)
         if (binding) {
           const exportedName =
-            node.exported.type === 'Identifier' ? node.exported.name : localName
+            node.exported.type === 'Identifier'
+              ? node.exported.name
+              : node.exported.value
           checkFunction(binding.functionNode, exportedName)
         }
       },
