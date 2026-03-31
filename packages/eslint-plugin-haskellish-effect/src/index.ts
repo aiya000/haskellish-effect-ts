@@ -39,15 +39,15 @@ const recommended = {
     'haskellish-effect': plugin,
   },
   rules: {
-    'haskellish-effect/only-allowed-imports': 'error' as const,
-    'haskellish-effect/no-global-access': 'error' as const,
-    'haskellish-effect/no-implicit-globalthis': 'error' as const,
-    'haskellish-effect/capability-enforcement': 'warn' as const,
-    'haskellish-effect/no-promise': 'warn' as const,
-    'haskellish-effect/no-explicit-any': 'warn' as const,
-    'haskellish-effect/no-throw': 'warn' as const,
-    'haskellish-effect/no-mutation': 'warn' as const,
-  },
+    'haskellish-effect/only-allowed-imports': 'error',
+    'haskellish-effect/no-global-access': 'error',
+    'haskellish-effect/no-implicit-globalthis': 'error',
+    'haskellish-effect/capability-enforcement': 'warn',
+    'haskellish-effect/no-promise': 'warn',
+    'haskellish-effect/no-explicit-any': 'warn',
+    'haskellish-effect/no-throw': 'warn',
+    'haskellish-effect/no-mutation': 'warn',
+  } as const,
 }
 
 const strict = {
@@ -55,19 +55,43 @@ const strict = {
     'haskellish-effect': plugin,
   },
   rules: {
-    'haskellish-effect/only-allowed-imports': 'error' as const,
-    'haskellish-effect/no-global-access': 'error' as const,
-    'haskellish-effect/no-implicit-globalthis': 'error' as const,
-    'haskellish-effect/capability-enforcement': 'error' as const,
-    'haskellish-effect/no-promise': 'error' as const,
-    'haskellish-effect/no-explicit-any': 'error' as const,
-    'haskellish-effect/effect-boundary': 'error' as const,
-    'haskellish-effect/no-throw': 'error' as const,
-    'haskellish-effect/no-mutation': 'error' as const,
-  },
+    'haskellish-effect/only-allowed-imports': 'error',
+    'haskellish-effect/no-global-access': 'error',
+    'haskellish-effect/no-implicit-globalthis': 'error',
+    'haskellish-effect/capability-enforcement': 'error',
+    'haskellish-effect/no-promise': 'error',
+    'haskellish-effect/no-explicit-any': 'error',
+    'haskellish-effect/effect-boundary': 'error',
+    'haskellish-effect/no-throw': 'error',
+    'haskellish-effect/no-mutation': 'error',
+  } as const,
 }
 
-Object.assign(plugin.configs, { recommended, strict })
+// Creates an effects layer config for the given file patterns.
+// Within matched directories:
+// - Imports from any npm module are allowed
+// - Direct global access is allowed
+// - But exported functions must return Effect types
+function createEffectsLayer(files: readonly string[]) {
+  return {
+    files: [...files],
+    plugins: {
+      'haskellish-effect': plugin,
+    },
+    rules: {
+      'haskellish-effect/only-allowed-imports': 'off',
+      'haskellish-effect/no-global-access': 'off',
+      'haskellish-effect/no-implicit-globalthis': 'off',
+      'haskellish-effect/capability-enforcement': 'off',
+      'haskellish-effect/effect-boundary': 'error',
+    } as const,
+  }
+}
+
+// Default effects layer targeting **/effects/**/*.ts
+const effectsLayer = createEffectsLayer(['**/effects/**/*.ts'])
+
+Object.assign(plugin.configs, { recommended, strict, effectsLayer })
 
 export default plugin
-export { rules, recommended, strict }
+export { rules, recommended, strict, effectsLayer, createEffectsLayer }

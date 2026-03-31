@@ -13,7 +13,7 @@ export const jsonParse = (
   input: string,
 ): Effect.Effect<unknown, JsonParseError> =>
   Effect.try({
-    try: () => JSON.parse(input) as unknown,
+    try: (): unknown => JSON.parse(input),
     catch: (reason) => new JsonParseError({ input, reason }),
   })
 

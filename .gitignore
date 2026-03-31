@@ -3,3 +3,5 @@ dist/
 *.tsbuildinfo
 bun.lockb
 .turbo
+pnpm-workspace.yaml
+pnpm-lock.yaml

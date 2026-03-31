@@ -102,6 +102,88 @@ const counter = Effect.gen(function* () {
 | `no-mutation`            | Blocks `let`/`var`, reassignment, `++`/`--` — use `const` and Effect's `Ref` |
 | `effect-boundary`        | Exported functions should return Effect (strict mode)               |
 
+## Effects Layer
+
+The **effects layer** is a special directory where you can wrap external npm modules with Effect types. Within this layer:
+
+- **Imports from any npm module are allowed** (normally restricted by `only-allowed-imports` and `capability-enforcement`)
+- **Direct global access is allowed** (normally restricted by `no-global-access` and `no-implicit-globalthis`)
+- **Exported functions must return `Effect` types** (enforced by `effect-boundary`)
+
+This encourages a clean architecture: keep your wrapping code in a dedicated `effects/` directory, and use those Effect-typed wrappers everywhere else.
+
+### Setup
+
+```js
+// eslint.config.js
+import { recommended, effectsLayer } from 'haskellish-effect-config'
+
+export default [
+  ...recommended,
+  effectsLayer,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+]
+```
+
+By default, the effects layer applies to all `**/effects/**/*.ts` files.
+
+### Custom Directory Name
+
+If you prefer a directory name other than `effects/`, use `createEffectsLayer` to target your own file patterns:
+
+```js
+// eslint.config.js
+import { recommended, createEffectsLayer } from 'haskellish-effect-config'
+
+export default [
+  ...recommended,
+  createEffectsLayer(['**/wrappers/**/*.ts']),
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+]
+```
+
+### Example
+
+```typescript
+// src/effects/axios.ts — wrapping axios with Effect types
+import { Effect } from 'haskellish-effect'
+import axios from 'axios'  // ✅ External imports allowed in effects/
+
+export const get = (
+  url: string,
+): Effect.Effect<{ data: unknown }, unknown> =>
+  Effect.tryPromise({
+    try: () => axios.get(url),
+    catch: (error) => error,
+  })
+```
+
+```typescript
+// src/services/user.ts — using the wrapped Effect
+import { Effect, pipe } from 'haskellish-effect'
+import { get } from '../effects/axios.js'  // ✅ Relative import
+
+export const getUser = (id: number) =>
+  pipe(
+    get(`/api/users/${id}`),
+    Effect.map((res) => res.data),
+  )
+```
+
 ## Documentation
 
 - [Motivation](./docs/motivation.md) — Why this project exists

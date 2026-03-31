@@ -99,7 +99,8 @@ Rules of thumb:
 
 1. **Prefer safe wrappers** — they compose with Effect and provide error typing
 2. **Use unsafe bindings at the boundary** — logging, debugging, FFI
-3. **Never hide unsafe in a "pure-looking" module** — the import should be in the file that uses it
+3. **Use the effects layer** — wrap external npm modules in a dedicated `effects/` directory where imports are relaxed but exports must be Effect types (see [Usage Guide](./usage-guide.md#effects-layer))
+4. **Never hide unsafe in a "pure-looking" module** — the import should be in the file that uses it
 
 ## State Management (with `no-mutation` enabled)
 

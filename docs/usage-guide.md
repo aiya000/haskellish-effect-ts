@@ -243,8 +243,107 @@ Recommended folder structure:
 
 ```
 src/
+  effects/       # Effects layer: wrap external npm modules with Effect types
   lib/           # Pure functions and data types
   services/      # Effect services (Context.Tag + Layer)
   unsafe/        # Modules that import from haskellish-effect/unsafe
   main.ts        # Entry point where Effects are run
 ```
+
+## Effects Layer
+
+The **effects layer** is a dedicated directory (`effects/`) where you wrap external npm modules with Effect types. Import restrictions are relaxed in this directory, but all exported functions must return `Effect` types.
+
+### Setup
+
+Add `effectsLayer` to your ESLint config:
+
+```js
+// eslint.config.js
+import { recommended, effectsLayer } from 'haskellish-effect-config'
+
+export default [
+  ...recommended,
+  effectsLayer,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+]
+```
+
+By default, the effects layer applies to all `**/effects/**/*.ts` files.
+
+### Custom Directory Name
+
+If you prefer a directory name other than `effects/`, use `createEffectsLayer` to target your own file patterns:
+
+```js
+// eslint.config.js
+import { recommended, createEffectsLayer } from 'haskellish-effect-config'
+
+export default [
+  ...recommended,
+  createEffectsLayer(['**/wrappers/**/*.ts']),
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+]
+```
+
+### Writing Effect Wrappers
+
+Create a file in the `effects/` directory that imports from an external module and exports Effect-typed functions:
+
+```typescript
+// src/effects/axios.ts
+import { Effect } from 'haskellish-effect'
+import axios from 'axios'  // ✅ External imports allowed in effects/
+
+export const get = (
+  url: string,
+): Effect.Effect<{ data: unknown }, unknown> =>
+  Effect.tryPromise({
+    try: () => axios.get(url),
+    catch: (error) => error,
+  })
+
+export const post = (
+  url: string,
+  body: unknown,
+): Effect.Effect<{ data: unknown }, unknown> =>
+  Effect.tryPromise({
+    try: () => axios.post(url, body),
+    catch: (error) => error,
+  })
+```
+
+### Using Wrapped Effects
+
+In the rest of your codebase, import from the `effects/` directory instead of the external module:
+
+```typescript
+// src/services/user.ts
+import { Effect, pipe } from 'haskellish-effect'
+import { get } from '../effects/axios.js'  // ✅ Relative import
+
+export const getUser = (id: number) =>
+  pipe(
+    get(`/api/users/${id}`),
+    Effect.map((res) => res.data),
+  )
+```
+
+This architecture ensures that:
+- External dependencies are isolated in one place
+- Side effects are explicitly tracked in the type system
+- The rest of your codebase remains pure and disciplined

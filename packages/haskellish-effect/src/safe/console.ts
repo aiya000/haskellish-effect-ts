@@ -42,7 +42,7 @@ export const consoleTable = (
   properties?: ReadonlyArray<string>,
 ): Effect.Effect<void> =>
   Effect.sync(() =>
-    console.table(tabularData, properties as string[] | undefined),
+    console.table(tabularData, properties ? [...properties] : undefined),
   )
 
 // Timing

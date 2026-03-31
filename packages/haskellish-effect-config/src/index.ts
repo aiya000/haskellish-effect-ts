@@ -2,6 +2,8 @@ import tseslint from 'typescript-eslint'
 import haskellishPlugin, {
   recommended as haskellishRecommended,
   strict as haskellishStrict,
+  effectsLayer as haskellishEffectsLayer,
+  createEffectsLayer as haskellishCreateEffectsLayer,
 } from 'eslint-plugin-haskellish-effect'
 
 export const recommended: ReadonlyArray<unknown> = [
@@ -32,5 +34,30 @@ export const strict: ReadonlyArray<unknown> = [
     },
   },
 ]
+
+/**
+ * Effects layer config — relaxes import restrictions in `effects/` directories
+ * while enforcing that exported functions return Effect types.
+ *
+ * Use this alongside `recommended` or `strict` to create a dedicated directory
+ * where users wrap external npm modules with Effect types.
+ *
+ * @example
+ * ```js
+ * import { recommended, effectsLayer } from 'haskellish-effect-config'
+ *
+ * export default [
+ *   ...recommended,
+ *   effectsLayer,
+ *   // ...
+ * ]
+ * ```
+ */
+export const effectsLayer: unknown = haskellishEffectsLayer
+
+// Create a custom effects layer config with your own file patterns.
+// Use this if you prefer a directory name other than `effects/`.
+export const createEffectsLayer: (files: readonly string[]) => unknown =
+  haskellishCreateEffectsLayer
 
 export { haskellishPlugin }
