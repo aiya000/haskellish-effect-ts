@@ -33,5 +33,15 @@
     "tsup": "^8.0.0",
     "typescript": "^5.5.0"
   },
+  "keywords": [
+    "effect",
+    "effect-ts",
+    "haskell",
+    "functional-programming",
+    "fp",
+    "typescript",
+    "purity",
+    "side-effects"
+  ],
   "license": "MIT"
 }

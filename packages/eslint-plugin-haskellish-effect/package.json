@@ -31,5 +31,17 @@
   "peerDependencies": {
     "eslint": ">=9.0.0"
   },
+  "keywords": [
+    "eslint",
+    "eslint-plugin",
+    "effect",
+    "effect-ts",
+    "haskell",
+    "functional-programming",
+    "fp",
+    "typescript",
+    "purity",
+    "linting"
+  ],
   "license": "MIT"
 }
