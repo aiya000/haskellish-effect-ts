@@ -52,9 +52,8 @@ ESLintのスコープ分析を活用し、`scope.through`（未解決参照）�
 
 ### 公開準備
 
-1. `npm publish`（または`bun publish`）で3パッケージを公開
-2. GitHubリポジトリの作成とCI設定（GitHub Actions）
-3. CHANGELOGとリリースノートの整備
+1. GitHubリポジトリの作成とCI設定（GitHub Actions）
+1. CHANGELOGとリリースノートの整備
 
 ### カスタマイズ
 
