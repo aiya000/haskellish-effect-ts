@@ -5,3 +5,4 @@ bun.lockb
 .turbo
 pnpm-workspace.yaml
 pnpm-lock.yaml
+.claude/settings.local.json
