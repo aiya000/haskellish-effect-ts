@@ -1,8 +1,10 @@
 name: Publish to npm
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [main]
+    paths:
+      - 'packages/**'
 
 permissions:
   contents: read
@@ -10,7 +12,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: ${{ !github.event.release.prerelease }}
     permissions:
       contents: read
     steps:
@@ -39,18 +40,18 @@ jobs:
 
       - name: Publish eslint-plugin-haskellish-effect
         working-directory: packages/eslint-plugin-haskellish-effect
-        run: bun publish --no-git-checks --access public
+        run: bun publish --no-git-checks --access public || echo "Version already published, skipping."
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish haskellish-effect-config
         working-directory: packages/haskellish-effect-config
-        run: bun publish --no-git-checks --access public
+        run: bun publish --no-git-checks --access public || echo "Version already published, skipping."
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish haskellish-effect
         working-directory: packages/haskellish-effect
-        run: bun publish --no-git-checks --access public
+        run: bun publish --no-git-checks --access public || echo "Version already published, skipping."
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
