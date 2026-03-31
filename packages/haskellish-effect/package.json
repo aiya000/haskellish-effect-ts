@@ -1,6 +1,6 @@
 {
   "name": "haskellish-effect",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Haskell-like discipline for TypeScript via Effect-TS — controlled re-exports with safe and unsafe boundaries",
   "type": "module",
   "exports": {

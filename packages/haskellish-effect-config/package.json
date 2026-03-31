@@ -1,6 +1,6 @@
 {
   "name": "haskellish-effect-config",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared ESLint configs combining typescript-eslint and haskellish-effect plugin",
   "type": "module",
   "exports": {
