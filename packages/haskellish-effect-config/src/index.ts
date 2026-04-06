@@ -6,10 +6,14 @@ import haskellishPlugin, {
   createEffectsLayer as haskellishCreateEffectsLayer,
 } from 'eslint-plugin-haskellish-effect'
 
+// TypeScript file patterns — keeps rules from firing on config files (.mjs, .js, etc.)
+const tsFiles = ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts']
+
 export const recommended: ReadonlyArray<unknown> = [
   ...tseslint.configs.recommendedTypeChecked,
   haskellishRecommended,
   {
+    files: tsFiles,
     rules: {
       '@typescript-eslint/no-unsafe-assignment': 'error',
       '@typescript-eslint/no-unsafe-call': 'error',
@@ -23,6 +27,7 @@ export const strict: ReadonlyArray<unknown> = [
   ...tseslint.configs.strictTypeChecked,
   haskellishStrict,
   {
+    files: tsFiles,
     rules: {
       '@typescript-eslint/no-unsafe-assignment': 'error',
       '@typescript-eslint/no-unsafe-call': 'error',

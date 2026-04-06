@@ -33,8 +33,12 @@ const plugin: {
   configs: {},
 }
 
+// Scoped to TypeScript files so config files (eslint.config.mjs, etc.) are unaffected
+const tsFiles = ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'] as const
+
 // Flat configs need a reference to the plugin itself
 const recommended = {
+  files: [...tsFiles],
   plugins: {
     'haskellish-effect': plugin,
   },
@@ -51,6 +55,7 @@ const recommended = {
 }
 
 const strict = {
+  files: [...tsFiles],
   plugins: {
     'haskellish-effect': plugin,
   },
