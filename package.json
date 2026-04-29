@@ -13,7 +13,9 @@
     "// ↓ bun has no pack subcommand, so npm is used here instead": "",
     "show-package-files": "npm pack --dry-run --workspace packages/haskellish-effect --workspace packages/eslint-plugin-haskellish-effect --workspace packages/haskellish-effect-config",
     "// ↓ npm may warn about unsupported 'workspace:*' URLs, but this is harmless — the script doesn't rely on workspace resolution": "",
-    "bump-versions": "cd packages/haskellish-effect && npm version patch ; cd ../eslint-plugin-haskellish-effect && npm version patch ; cd ../haskellish-effect-config && npm version patch ; echo 'Updated versions in packages'"
+    "bump-versions": "cd packages/haskellish-effect && npm version patch ; cd ../eslint-plugin-haskellish-effect && npm version patch ; cd ../haskellish-effect-config && npm version patch ; echo 'Updated versions in packages'",
+    "publish-all": "cd packages/haskellish-effect && bun publish --access public ; cd ../eslint-plugin-haskellish-effect && bun publish --access public ; cd ../haskellish-effect-config && bun publish --access public ; echo 'Published all packages'",
+    "release": "bun run bump-versions && bun run publish-all"
   },
   "devDependencies": {
     "eslint": "^9.0.0",
