@@ -1,6 +1,6 @@
 {
   "name": "haskellish-effect",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Haskell-like discipline for TypeScript via Effect-TS — controlled re-exports with safe and unsafe boundaries",
   "type": "module",
   "exports": {
@@ -18,7 +18,9 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"

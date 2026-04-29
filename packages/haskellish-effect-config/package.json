@@ -1,6 +1,6 @@
 {
   "name": "haskellish-effect-config",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Shared ESLint configs combining typescript-eslint and haskellish-effect plugin",
   "type": "module",
   "exports": {
@@ -13,7 +13,9 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"

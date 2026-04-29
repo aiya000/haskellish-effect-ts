@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-haskellish-effect",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "ESLint plugin enforcing Haskell-like discipline in TypeScript via Effect-TS",
   "type": "module",
   "exports": {
@@ -13,7 +13,9 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "bun test",
