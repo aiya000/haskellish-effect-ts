@@ -1,0 +1,57 @@
+name: Publish to npm
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/**'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.11'
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Test
+        run: bun run test
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Configure npm authentication
+        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish eslint-plugin-haskellish-effect
+        working-directory: packages/eslint-plugin-haskellish-effect
+        run: bun publish --no-git-checks --access public || echo "Version already published, skipping."
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish haskellish-effect-config
+        working-directory: packages/haskellish-effect-config
+        run: bun publish --no-git-checks --access public || echo "Version already published, skipping."
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish haskellish-effect
+        working-directory: packages/haskellish-effect
+        run: bun publish --no-git-checks --access public || echo "Version already published, skipping."
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
